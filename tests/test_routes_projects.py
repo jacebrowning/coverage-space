@@ -8,6 +8,13 @@ from coveragespace.models import Project
 from .conftest import load
 
 
+DEFAULT_METRICS = dict(
+    unit=0.0,
+    integration=0.0,
+    overall=0.0,
+)
+
+
 def describe_projects():
 
     @pytest.fixture
@@ -28,11 +35,7 @@ def describe_projects():
             response = client.get("/my_owner/my_repo")
 
             expect(response.status_code) == 200
-            expect(load(response)) == dict(
-                unit=0.0,
-                integration=0.0,
-                overall=0.0,
-            )
+            expect(load(response)) == DEFAULT_METRICS
 
         def it_returns_actual_metrics_on_existing(client, project_modified):
             response = client.get("/my_owner/my_repo")
@@ -43,3 +46,11 @@ def describe_projects():
                 integration=2.0,
                 overall=3.0,
             )
+
+    def describe_PATCH():
+
+        def it_ignores_empty_params(client, project):
+            response = client.patch("/my_owner/my_repo", data={})
+
+            expect(response.status_code) == 200
+            expect(project.metrics) == DEFAULT_METRICS
