@@ -17,4 +17,5 @@ rm -rfv data | indent
 git config --global user.name "Coverage Space" | indent
 git config --global user.email "info@coverage.space" | indent
 
+# git clone https://<token>@github.com/jacebrowning/coverage-space-data.git
 git clone ${DATA_REPO_URL} data | indent
