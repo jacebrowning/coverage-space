@@ -4,7 +4,7 @@ from flask import Blueprint
 
 from .. import __version__
 
-from ._common import CHANGES_URL
+from ._common import CHANGES_URL, track
 
 
 blueprint = Blueprint('root', __name__, url_prefix="/")
@@ -16,4 +16,7 @@ def get():
     data = OrderedDict()
     data['version'] = __version__
     data['changes'] = CHANGES_URL
+
+    track("root")
+
     return data

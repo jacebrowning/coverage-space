@@ -4,6 +4,8 @@ import logging
 import requests
 from flask import current_app, request
 
+from .. import __url__
+
 GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/"
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
 CHANGES_URL = GITHUB_BASE + "CHANGES.md"
@@ -11,7 +13,7 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def track():
+def track(title):
     """Log the requested content, server-side."""
     data = dict(
         v=1,
@@ -19,10 +21,9 @@ def track():
         cid=request.remote_addr,
 
         t='pageview',
-        # TODO: determine if this is neccessary
-        # dh='coverage.space',
+        dh=__url__,
         dp=request.path,
-        # dt="TBD""
+        dt=title,
 
         uip=request.remote_addr,
         ua=request.user_agent.string,

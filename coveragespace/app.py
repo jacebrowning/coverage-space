@@ -5,7 +5,6 @@ from flask import request, current_app
 from flask_api import FlaskAPI
 
 from . import routes
-from .routes._common import track
 
 log = logging.getLogger('api')
 
@@ -40,8 +39,6 @@ def register_services(app):
                 path += "?%s" % unquote(urlencode(request.args))
             log.info("%s: %s - %i", request.method, path,
                      response.status_code)
-        else:
-            track()
 
         return response
 
