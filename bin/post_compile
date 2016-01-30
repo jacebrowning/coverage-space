@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+
+indent() {
+  sed "s/^/       /"
+}
+
+puts-step() {
+  echo "-----> $@"
+}
+
+puts-step "Configuring data repository..."
+
+rm -rfv data | indent
+
+git config --global user.name "Coverage Space" | indent
+git config --global user.email "info@coverage.space" | indent
+
+git clone ${DATA_REPO_URL} data | indent

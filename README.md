@@ -1,6 +1,6 @@
-# coverage.space
+# The Coverage Space
 
-A sample project templated from jacebrowning/template-python.
+Track code coverage metrics.
 
 [![Build Status](http://img.shields.io/travis/jacebrowning/coverage-space/master.svg)](https://travis-ci.org/jacebrowning/coverage-space)
 [![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
@@ -12,7 +12,7 @@ A sample project templated from jacebrowning/template-python.
 
 ## Requirements
 
-* Python 3.5+
+* Python 3.4+
 
 ## Installation
 

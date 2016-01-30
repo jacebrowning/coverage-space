@@ -10,9 +10,9 @@ ifndef TRAVIS
 endif
 
 # Test settings
-UNIT_TEST_COVERAGE := 88
-INTEGRATION_TEST_COVERAGE := 47
-COMBINED_TEST_COVERAGE := 100
+UNIT_TEST_COVERAGE := 72
+INTEGRATION_TEST_COVERAGE := 82
+COMBINED_TEST_COVERAGE := 82
 
 # System paths
 PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
@@ -68,6 +68,7 @@ NOSE := $(BIN_)nosetests
 PYTEST := $(BIN_)py.test
 COVERAGE := $(BIN_)coverage
 SNIFFER := $(BIN_)sniffer
+HONCHO := $(ACTIVATE) && honcho
 
 # Flags for PHONY targets
 INSTALLED_FLAG := $(ENV)/.installed
@@ -77,6 +78,10 @@ DOCS_FLAG := $(ENV)/.docs
 ALL_FLAG := $(ENV)/.all
 
 # Main Targets #################################################################
+
+IP ?= $(shell ipconfig getifaddr en0 || ipconfig getifaddr en1)
+CONFIG ?= dev
+PORT ?= 5000
 
 .PHONY: all
 all: depends doc $(ALL_FLAG)
@@ -95,6 +100,20 @@ endif
 watch: depends-dev .clean-test
 	@ rm -rf $(FAILED_FLAG)
 	$(SNIFFER)
+
+# Server Targets ###############################################################
+
+.PHONY: run
+run: depends-dev .env
+	$(HONCHO) start
+
+.PHONY: launch
+launch: depends-dev
+	eval "sleep 3; open http://$(IP):$(PORT)" &
+	$(MAKE) run
+
+.env:
+	echo "CONFIG=dev" >> .env
 
 # Development Installation #####################################################
 
@@ -195,7 +214,7 @@ fix: depends-dev
 
 RANDOM_SEED ?= $(shell date +%s)
 
-PYTEST_CORE_OPTS := --doctest-modules -r xXw -vv
+PYTEST_CORE_OPTS := -r xXw -vv
 PYTEST_COV_OPTS := --cov=$(PACKAGE) --cov-report=term-missing --no-cov-on-fail
 PYTEST_RANDOM_OPTS := --random --random-seed=$(RANDOM_SEED)
 
