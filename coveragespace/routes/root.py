@@ -17,6 +17,6 @@ def get():
     data['version'] = __version__
     data['changes'] = CHANGES_URL
 
-    track("root")
+    track(blueprint.name + " - GET")
 
     return data
