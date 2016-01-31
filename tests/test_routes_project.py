@@ -8,7 +8,7 @@ from coveragespace.models import Project
 from .utilities import load
 
 
-def describe_projects():
+def describe_project():
 
     @pytest.fixture
     def project(tmpdir):
@@ -80,7 +80,7 @@ def describe_projects():
             }
 
 
-def describe_branch():
+def describe_project_branch():
 
     @pytest.fixture
     def project(tmpdir):
@@ -134,3 +134,58 @@ def describe_branch():
             _, data = load(client.get("/my_owner/my_repo/master"))
 
             expect(data['unit']) == 1.23
+
+
+def describe_project_reset():
+
+    @pytest.fixture
+    def project(tmpdir):
+        tmpdir.chdir()
+        return Project('my_owner', 'my_repo')
+
+    @pytest.fixture
+    def project_modified(project):
+        project.unit = 1
+        project.integration = 2
+        project.overall = 3
+        return project
+
+    def describe_post():
+
+        def it_returns_reset_metrics(client, project_modified):
+            status, data = load(client.post("/my_owner/my_repo/reset"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
+
+
+def describe_project_branch_reset():
+
+    @pytest.fixture
+    def project(tmpdir):
+        tmpdir.chdir()
+        return Project('my_owner', 'my_repo', 'my_branch')
+
+    @pytest.fixture
+    def project_modified(project):
+        project.unit = 4
+        project.integration = 5
+        project.overall = 6
+        return project
+
+    def describe_post():
+
+        def it_returns_reset_metrics(client, project_modified):
+            endpoint = "/my_owner/my_repo/my_branch/reset"
+            status, data = load(client.post(endpoint))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }

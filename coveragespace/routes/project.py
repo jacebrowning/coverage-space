@@ -35,3 +35,23 @@ def branch_metrics(args, owner, repo, branch):
         project.metrics = args
 
     return track(project.metrics)
+
+
+@blueprint.route("<owner>/<repo>/reset", methods=['POST'])
+def reset_metrics(owner, repo):
+    """Reset coverage metrics for the default branch."""
+    project = Project(owner, repo)
+
+    project.reset()
+
+    return track(project.metrics)
+
+
+@blueprint.route("<owner>/<repo>/<path:branch>/reset", methods=['POST'])
+def reset_branch_metrics(owner, repo, branch):
+    """Reset coverage metrics for a particular branch."""
+    project = Project(owner, repo, branch)
+
+    project.reset()
+
+    return track(project.metrics)

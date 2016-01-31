@@ -6,7 +6,7 @@ from marshmallow import Schema, fields, pre_load, post_load
 from flask_api.exceptions import ParseError
 
 
-parser = FlaskParser(('json', 'form', 'data'))
+parser = FlaskParser(('form', 'data'))
 log = logging.getLogger(__name__)
 
 

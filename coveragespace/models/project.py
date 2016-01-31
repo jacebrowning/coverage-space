@@ -31,3 +31,8 @@ class Project(object):
         self.unit = data.get('unit', self.unit)
         self.integration = data.get('integration', self.integration)
         self.overall = data.get('overall', self.overall)
+
+    def reset(self):
+        self.unit = 0.0
+        self.integration = 0.0
+        self.overall = 0.0

@@ -40,3 +40,14 @@ def describe_project():
                 integration=0.0,
                 overall=42.0,
             )
+
+    def describe_reset():
+
+        def it_sets_all_metrics_to_zero(project_modified):
+            project_modified.reset()
+
+            expect(project_modified.metrics) == dict(
+                unit=0.0,
+                integration=0.0,
+                overall=0.0,
+            )
