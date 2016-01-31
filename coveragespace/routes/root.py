@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 
 from flask import Blueprint
@@ -15,6 +16,7 @@ def get():
     """Track code coverage metrics."""
     data = OrderedDict()
     data['version'] = __version__
+    data['date'] = os.getenv('DEPLOY_DATE')
     data['changes'] = CHANGES_URL
 
     track(blueprint.name + " - GET")

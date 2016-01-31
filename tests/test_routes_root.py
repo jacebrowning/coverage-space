@@ -7,11 +7,14 @@ from .utilities import load
 
 def describe_root():
 
-    def it_returns_links_and_metadata(client):
+    def it_returns_metadata(client, monkeypatch):
+        monkeypatch.setenv('DEPLOY_DATE', "today")
+
         status, data = load(client.get("/"))
 
         expect(status) == 200
-        expect(data) == dict(
-            version="0.0.0",
-            changes="https://raw.githubusercontent.com/jacebrowning/coverage-space/master/CHANGES.md"
-        )
+        expect(data) == {
+            'version': "0.0.0",
+            'date': "today",
+            'changes': "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/CHANGES.md"
+        }
