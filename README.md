@@ -1,6 +1,6 @@
 # The Coverage Space
 
-Track code coverage metrics.
+A place to track your code coverage metrics.
 
 [![Build Status](http://img.shields.io/travis/jacebrowning/coverage-space/master.svg)](https://travis-ci.org/jacebrowning/coverage-space)
 [![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
@@ -13,7 +13,7 @@ Track code coverage metrics.
 The examples will use [HTTPie](https://github.com/jkbrzt/httpie) for simplicity, but the same could be accomplished with `curl`. To install it:
 
 ```sh
-$ pip install HTTPie
+$ pip install httpie
 ```
 
 To update coverage metrics:

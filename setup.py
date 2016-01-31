@@ -18,7 +18,7 @@ setuptools.setup(
     name=__project__,
     version=__version__,
 
-    description="Track code coverage metrics.",
+    description="A place to track your code coverage metrics.",
     url='https://github.com/jacebrowning/coverage-space',
     author='Jace Browning',
     author_email='jacebrowning@gmail.com',

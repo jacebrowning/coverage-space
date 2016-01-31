@@ -59,6 +59,7 @@ PIP := $(BIN_)pip
 EASY_INSTALL := $(BIN_)easy_install
 RST2HTML := $(PYTHON) $(BIN_)rst2html.py
 PDOC := $(PYTHON) $(BIN_)pdoc
+MKDOCS := $(BIN_)mkdocs
 PEP8 := $(BIN_)pep8
 PEP8RADIUS := $(BIN_)pep8radius
 PEP257 := $(BIN_)pep257
@@ -143,7 +144,7 @@ depends: depends-ci depends-dev
 .PHONY: depends-ci
 depends-ci: env Makefile $(DEPENDS_CI_FLAG)
 $(DEPENDS_CI_FLAG): Makefile
-	$(PIP) install --upgrade pep8 pep257 pylint coverage pytest pytest-describe pytest-expecter pytest-cov pytest-random pytest-runfailed
+	$(PIP) install --upgrade pep8 pep257 pylint coverage pytest pytest-describe pytest-expecter pytest-cov pytest-random pytest-runfailed mkdocs
 	@ touch $(DEPENDS_CI_FLAG)  # flag to indicate dependencies are installed
 
 .PHONY: depends-dev
@@ -161,11 +162,19 @@ endif
 
 # Documentation ################################################################
 
+URL := coverage.space
+
 .PHONY: doc
-doc: readme verify-readme apidocs uml
+doc: readme verify-readme uml apidocs mkdocs
+
+.PHONY: doc-live
+doc-live: doc
+	eval "sleep 3; open http://127.0.0.1:8000" &
+	$(MKDOCS) serve
 
 .PHONY: read
 read: doc
+	$(OPEN) site/index.html
 	$(OPEN) apidocs/$(PACKAGE)/index.html
 	$(OPEN) README-pypi.html
 	$(OPEN) README-github.html
@@ -185,17 +194,23 @@ $(DOCS_FLAG): README.rst
 	$(PYTHON) setup.py check --restructuredtext --strict --metadata
 	@ touch $(DOCS_FLAG)  # flag to indicate README has been checked
 
-.PHONY: apidocs
-apidocs: depends-dev apidocs/$(PACKAGE)/index.html
-apidocs/$(PACKAGE)/index.html: $(SOURCES)
-	$(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
-
 .PHONY: uml
 uml: depends-ci docs/*.png
 docs/*.png: $(SOURCES)
 	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore test
 	- mv -f classes_$(PACKAGE).png docs/classes.png
 	- mv -f packages_$(PACKAGE).png docs/packages.png
+
+.PHONY: apidocs
+apidocs: depends-dev apidocs/$(PACKAGE)/index.html
+apidocs/$(PACKAGE)/index.html: $(SOURCES)
+	$(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
+
+.PHONY: mkdocs
+mkdocs: depends-ci site/index.html
+site/index.html: mkdocs.yml docs/*.md
+	$(MKDOCS) build --clean --strict
+	echo $(URL) > site/CNAME
 
 # Static Analysis ##############################################################
 
