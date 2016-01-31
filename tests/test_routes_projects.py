@@ -5,7 +5,7 @@ from expecter import expect
 
 from coveragespace.models import Project
 
-from .conftest import load
+from .utilities import load
 
 
 def describe_projects():
@@ -22,24 +22,59 @@ def describe_projects():
         project.overall = 3
         return project
 
-    def describe_GET():
+    def describe_get():
 
-        def it_returns_default_metrics_on_new(client, project):
-            response = client.get("/my_owner/my_repo")
+        def it_returns_default_metrics_when_new(client, project):
+            status, data = load(client.get("/my_owner/my_repo"))
 
-            expect(response.status_code) == 200
-            expect(load(response)) == dict(
-                unit=0.0,
-                integration=0.0,
-                overall=0.0,
-            )
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
 
-        def it_returns_actual_metrics_on_existing(client, project_modified):
-            response = client.get("/my_owner/my_repo")
+        def it_returns_actual_metrics_when_existing(client, project_modified):
+            status, data = load(client.get("/my_owner/my_repo"))
 
-            expect(response.status_code) == 200
-            expect(load(response)) == dict(
-                unit=1.0,
-                integration=2.0,
-                overall=3.0,
-            )
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.0,
+                'integration': 2.0,
+                'overall': 3.0,
+            }
+
+    def describe_patch():
+
+        def it_updates_metrics(client, project_modified):
+            params = {'integration': 42}
+            status, data = load(client.patch("/my_owner/my_repo", data=params))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.0,
+                'integration': 42.0,
+                'overall': 3.0,
+            }
+
+        def it_supports_updating_mulptiple_metrics(client, project_modified):
+            params = {'unit': 55, 'integration': 66}
+            status, data = load(client.patch("/my_owner/my_repo", data=params))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 55.0,
+                'integration': 66.0,
+                'overall': 3.0,
+            }
+
+        def it_returns_an_error_on_invalid_metrics(client):
+            params = {'integration': "foobar"}
+            status, data = load(client.patch("/my_owner/my_repo", data=params))
+
+            expect(status) == 422
+            expect(data) == {
+                'message': {
+                    'integration': ["Not a valid number."],
+                }
+            }

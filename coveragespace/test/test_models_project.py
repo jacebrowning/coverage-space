@@ -12,6 +12,11 @@ def describe_project():
     def project():
         return Project('abc', 'def')
 
+    @pytest.fixture
+    def project_modified(project):
+        project.unit = 1.2
+        return project
+
     def describe_init():
 
         def it_sets_attributes(project):
@@ -25,4 +30,13 @@ def describe_project():
                 unit=0.0,
                 integration=0.0,
                 overall=0.0,
+            )
+
+        def can_be_set(project_modified):
+            project_modified.metrics = dict(overall=42)
+
+            expect(project_modified.metrics) == dict(
+                unit=1.2,
+                integration=0.0,
+                overall=42.0,
             )

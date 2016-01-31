@@ -24,3 +24,9 @@ class Project(object):
         data['integration'] = self.integration
         data['overall'] = self.overall
         return data
+
+    @metrics.setter
+    def metrics(self, data):
+        self.unit = data.get('unit', self.unit)
+        self.integration = data.get('integration', self.integration)
+        self.overall = data.get('overall', self.overall)
