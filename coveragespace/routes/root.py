@@ -15,10 +15,9 @@ blueprint = Blueprint('root', __name__, url_prefix="/")
 def get():
     """Track code coverage metrics."""
     data = OrderedDict()
+
     data['version'] = __version__
     data['date'] = os.getenv('DEPLOY_DATE')
     data['changes'] = CHANGES_URL
 
-    track(blueprint.name + " - GET")
-
-    return data
+    return track(data)

@@ -111,6 +111,10 @@ else
 	$(HONCHO) start
 endif
 
+.PHONY: run-debug
+run-debug:
+	make run DEBUG=true
+
 .PHONY: launch
 launch: depends-dev
 	eval "sleep 3; open http://$(IP):$(PORT)" &

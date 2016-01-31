@@ -13,7 +13,7 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def track(title):
+def track(obj):
     """Log the requested content, server-side."""
     data = dict(
         v=1,
@@ -23,16 +23,19 @@ def track(title):
         t='pageview',
         dh=__url__,
         dp=request.path,
-        dt=title,
+        dt=request.method + ' ' + request.url_rule.endpoint,
 
         uip=request.remote_addr,
         ua=request.user_agent.string,
         dr=request.referrer,
     )
+
     if _get_tid(default=None):
         requests.post("http://www.google-analytics.com/collect", data=data)
     else:
         log.debug("Analytics data:\n%s", pprint.pformat(data))
+
+    return obj
 
 
 def _get_tid(*, default='local'):

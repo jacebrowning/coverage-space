@@ -78,3 +78,59 @@ def describe_projects():
                     'integration': ["Not a valid number."],
                 }
             }
+
+
+def describe_branch():
+
+    @pytest.fixture
+    def project(tmpdir):
+        tmpdir.chdir()
+        return Project('my_owner', 'my_repo', 'my_branch')
+
+    @pytest.fixture
+    def project_modified(project):
+        project.unit = 4
+        project.integration = 5
+        project.overall = 6
+        return project
+
+    def describe_get():
+
+        def it_returns_default_metrics_when_new(client, project):
+            status, data = load(client.get("/my_owner/my_repo/my_branch"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
+
+        def it_returns_actual_metrics_when_existing(client, project_modified):
+            status, data = load(client.get("/my_owner/my_repo/my_branch"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 4.0,
+                'integration': 5.0,
+                'overall': 6.0,
+            }
+
+    def describe_patch():
+
+        def it_updates_metrics(client, project_modified):
+            status, data = load(client.patch("/my_owner/my_repo/my_branch",
+                                             data={'integration': 42}))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 4.0,
+                'integration': 42.0,
+                'overall': 6.0,
+            }
+
+        def it_uses_master_as_the_default(client, project):
+            client.patch("/my_owner/my_repo", data={'unit': 1.23})
+            _, data = load(client.get("/my_owner/my_repo/master"))
+
+            expect(data['unit']) == 1.23

@@ -1,2 +1,2 @@
 from . import root
-from . import projects
+from . import project

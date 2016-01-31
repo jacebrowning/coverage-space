@@ -33,19 +33,23 @@ def configure_logging(app):
 
 def register_services(app):
 
-    def log_request(response):
+    def log_request(response=None):
         if current_app.debug:
             path = request.path
             if request.args:
                 path += "?%s" % unquote(urlencode(request.args))
-            log.info("%s: %s - %i", request.method, path,
-                     response.status_code)
+            if response:
+                log.info("%s: %s - %i", request.method, path,
+                         response.status_code)
+            else:
+                log.info("%s: %s", request.method, path)
 
         return response
 
+    app.before_request(log_request)
     app.after_request(log_request)
 
 
 def register_blueprints(app):
     app.register_blueprint(routes.root.blueprint)
-    app.register_blueprint(routes.projects.blueprint)
+    app.register_blueprint(routes.project.blueprint)

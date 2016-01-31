@@ -7,12 +7,13 @@ from yorm.converters import Float
 @yorm.attr(unit=Float)
 @yorm.attr(integration=Float)
 @yorm.attr(overall=Float)
-@yorm.sync("data/{self.owner}/{self.repo}.yml")
+@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml")
 class Project(object):
 
-    def __init__(self, owner, repo):
+    def __init__(self, owner, repo, branch='master'):
         self.owner = owner
         self.repo = repo
+        self.branch = branch
         self.unit = 0.0
         self.integration = 0.0
         self.overall = 0.0
