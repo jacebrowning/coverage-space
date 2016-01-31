@@ -12,7 +12,7 @@ blueprint = Blueprint('root', __name__, url_prefix="/")
 
 
 @blueprint.route("")
-def get():
+def index():
     """Track code coverage metrics."""
     data = OrderedDict()
 
