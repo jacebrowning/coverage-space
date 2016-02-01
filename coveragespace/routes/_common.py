@@ -1,4 +1,3 @@
-import os
 import pprint
 import logging
 from multiprocessing import Process
@@ -8,9 +7,6 @@ import requests
 from flask import current_app, request
 
 from .. import __url__
-
-ROOT = os.path.dirname(os.path.dirname(__file__))
-DATA = os.path.join(ROOT, "data")
 
 GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/"
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
@@ -23,10 +19,10 @@ def commit(obj):
     """Store updated metrics in version control."""
 
     def _commit():
-        os.chdir(DATA)
-        git.add(".")
-        git.commit(message=str(obj))
-        git.push()
+        kwargs = dict(git_dir="data/.git", work_tree="data")
+        git.add(".", **kwargs)
+        git.commit(message=str(obj), **kwargs)
+        git.push(**kwargs)
 
     if current_app.config['ENV'] == 'prod':
         process = Process(target=_commit)
