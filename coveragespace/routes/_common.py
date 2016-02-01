@@ -1,6 +1,7 @@
 import os
 import pprint
 import logging
+from multiprocessing import Process
 
 from sh import git  # pylint: disable=no-name-in-module
 import requests
@@ -17,11 +18,16 @@ log = logging.getLogger(__name__)
 
 def commit():
     """Store updated metrics in version control."""
-    if current_app.config['ENV'] == 'prod':
+
+    def _commit():
         os.chdir("data")
         git.add(".")
         git.commit(message='"Update metrics"')
         git.push()
+
+    if current_app.config['ENV'] == 'prod':
+        process = Process(target=_commit)
+        process.start()
 
 
 def track():
