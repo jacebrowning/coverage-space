@@ -9,6 +9,9 @@ from flask import current_app, request
 
 from .. import __url__
 
+ROOT = os.path.dirname(os.path.dirname(__file__))
+DATA = os.path.join(ROOT, "data")
+
 GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/"
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
 CHANGES_URL = GITHUB_BASE + "CHANGES.md"
@@ -20,7 +23,7 @@ def commit(obj):
     """Store updated metrics in version control."""
 
     def _commit():
-        os.chdir("data")
+        os.chdir(DATA)
         git.add(".")
         git.commit(message=str(obj))
         git.push()
