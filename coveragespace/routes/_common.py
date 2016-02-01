@@ -22,19 +22,15 @@ log = logging.getLogger(__name__)
 def commit(obj):
     """Store updated metrics in version control."""
 
-    def _commit(sync=False):
+    def run(sync=False):
         git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
-        git.stash()
-        if sync:
-            git.pull(rebase=True)
-        git.stash('pop')
         git.add(".")
         git.commit(message=str(obj))
         if sync:
             git.push()
 
     sync = current_app.config['ENV'] == 'prod'
-    process = Process(target=_commit, args=(dict(sync=sync)))
+    process = Process(target=run, args=[sync])
     process.start()
 
     return obj

@@ -27,6 +27,7 @@ def configure_logging(app):
     else:
         level = logging.INFO
     logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
+    logging.getLogger('sh').setLevel(logging.WARNING)
     logging.getLogger('yorm').setLevel(logging.WARNING)
     logging.getLogger('requests').setLevel(logging.WARNING)
 

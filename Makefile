@@ -106,8 +106,9 @@ watch: depends-dev .clean-test
 
 .PHONY: run
 run: depends-dev .env
+	$(HONCHO) run bin/post_compile
 ifdef DEBUG
-	CONFIG=dev $(PYTHON) manage.py run
+	$(HONCHO) run $(PYTHON) manage.py run
 else
 	$(HONCHO) start
 endif
@@ -122,7 +123,9 @@ launch: depends-dev
 	$(MAKE) run
 
 .env:
+	cd /tmp && git init coverage-space-data
 	echo "CONFIG=dev" >> .env
+	echo "DATA_REPO_URL=/tmp/coverage-space-data" >> .env
 
 # Development Installation #####################################################
 
