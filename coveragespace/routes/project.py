@@ -20,7 +20,7 @@ def metrics(args, owner, repo):
     project = Project(owner, repo)
 
     if request.method == 'PATCH':
-        project.update(args, _exc=UnprocessableEntity)
+        project.update(args, exception=UnprocessableEntity)
         commit(project)
 
     return track(project.metrics)
@@ -33,7 +33,7 @@ def branch_metrics(args, owner, repo, branch):
     project = Project(owner, repo, branch)
 
     if request.method == 'PATCH':
-        project.update(args, _exc=UnprocessableEntity)
+        project.update(args, exception=UnprocessableEntity)
         commit(project)
 
     return track(project.metrics)
