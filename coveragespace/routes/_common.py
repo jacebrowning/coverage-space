@@ -1,6 +1,8 @@
+import os
 import pprint
 import logging
 
+from sh import git  # pylint: disable=no-name-in-module
 import requests
 from flask import current_app, request
 
@@ -13,7 +15,16 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def track(obj):
+def commit():
+    """Store updated metrics in version control."""
+    if current_app.config['ENV'] == 'prod':
+        os.chdir("data")
+        git.add(".")
+        git.commit(message='"Update metrics"')
+        git.push()
+
+
+def track():
     """Log the requested content, server-side."""
     data = dict(
         v=1,
@@ -34,8 +45,6 @@ def track(obj):
         requests.post("http://www.google-analytics.com/collect", data=data)
     else:
         log.debug("Analytics data:\n%s", pprint.pformat(data))
-
-    return obj
 
 
 def _get_tid(*, default='local'):

@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from .. import __version__
 from ..models import Project
 
-from ._common import track
+from ._common import commit, track
 from ._schemas import parser, ProjectSchema, UnprocessableEntity
 
 
@@ -21,8 +21,11 @@ def metrics(args, owner, repo):
 
     if request.method == 'PATCH':
         project.update(args, _exc=UnprocessableEntity)
+        commit()
 
-    return track(project.metrics)
+    track()
+
+    return project.metrics
 
 
 @blueprint.route("<owner>/<repo>/<path:branch>", methods=['GET', 'PATCH'])
@@ -33,8 +36,11 @@ def branch_metrics(args, owner, repo, branch):
 
     if request.method == 'PATCH':
         project.update(args, _exc=UnprocessableEntity)
+        commit()
 
-    return track(project.metrics)
+    track()
+
+    return project.metrics
 
 
 @blueprint.route("<owner>/<repo>/reset", methods=['POST'])
@@ -43,8 +49,11 @@ def reset_metrics(owner, repo):
     project = Project(owner, repo)
 
     project.reset()
+    commit()
 
-    return track(project.metrics)
+    track()
+
+    return project.metrics
 
 
 @blueprint.route("<owner>/<repo>/<path:branch>/reset", methods=['POST'])
@@ -53,5 +62,8 @@ def reset_branch_metrics(owner, repo, branch):
     project = Project(owner, repo, branch)
 
     project.reset()
+    commit()
 
-    return track(project.metrics)
+    track()
+
+    return project.metrics

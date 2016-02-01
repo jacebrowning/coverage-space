@@ -14,10 +14,12 @@ blueprint = Blueprint('root', __name__, url_prefix="/")
 @blueprint.route("")
 def index():
     """Track code coverage metrics."""
-    data = OrderedDict()
+    metadata = OrderedDict()
 
-    data['version'] = __version__
-    data['date'] = os.getenv('DEPLOY_DATE')
-    data['changes'] = CHANGES_URL
+    metadata['version'] = __version__
+    metadata['date'] = os.getenv('DEPLOY_DATE')
+    metadata['changes'] = CHANGES_URL
 
-    return track(data)
+    track()
+
+    return metadata
