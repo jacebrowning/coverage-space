@@ -32,14 +32,20 @@ def describe_project():
                 overall=0.0,
             )
 
-        def can_be_set(project_modified):
-            project_modified.metrics = dict(overall=42)
+    def describe_update():
+
+        def it_sets_new_metrics(project_modified):
+            project_modified.update(dict(overall=42))
 
             expect(project_modified.metrics) == dict(
                 unit=1.2,
                 integration=0.0,
                 overall=42.0,
             )
+
+        def it_raises_exception_when_they_decrease(project_modified):
+            with expect.raises(ValueError):
+                project_modified.update(dict(unit=1.1))
 
     def describe_reset():
 

@@ -79,6 +79,29 @@ def describe_project():
                 }
             }
 
+        def it_returns_an_error_when_metrics_decrease(client, project_modified):
+            params = {'overall': 2.9}
+            status, data = load(client.patch("/my_owner/my_repo", data=params))
+
+            expect(status) == 422
+            expect(data) == {
+                'message': {
+                    'overall': ["Lower than previous value."],
+                }
+            }
+
+        def it_handles_multiple_bad_metrics(client, project_modified):
+            params = {'unit': 0, 'integration': 0, 'overall': 99}
+            status, data = load(client.patch("/my_owner/my_repo", data=params))
+
+            expect(status) == 422
+            expect(data) == {
+                'message': {
+                    'unit': ["Lower than previous value."],
+                    'integration': ["Lower than previous value."],
+                }
+            }
+
 
 def describe_project_branch():
 

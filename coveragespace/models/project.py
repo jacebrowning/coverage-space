@@ -26,11 +26,17 @@ class Project(object):
         data['overall'] = self.overall
         return data
 
-    @metrics.setter
-    def metrics(self, data):
-        self.unit = data.get('unit', self.unit)
-        self.integration = data.get('integration', self.integration)
-        self.overall = data.get('overall', self.overall)
+    def update(self, data, _exc=ValueError):
+        message = OrderedDict()
+        for name in ['unit', 'integration', 'overall']:
+            value = data.get(name)
+            if value is not None:
+                if value < getattr(self, name):
+                    message[name] = ["Lower than previous value."]
+                else:
+                    setattr(self, name, value)
+        if message:
+            raise _exc(message)
 
     def reset(self):
         self.unit = 0.0
