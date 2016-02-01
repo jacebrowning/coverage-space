@@ -24,8 +24,13 @@ class ProjectSchema(Schema):
     integration = fields.Float()
     overall = fields.Float()
 
-    _pre = pre_load(lambda _, data: log.debug("Parsing data: %r", data))
-    _post = post_load(lambda _, data: log.debug("Parsed data: %r", data))
+    @pre_load
+    def log_input(self, data):  # pylint: disable=no-self-use
+        log.debug("Input data: %r", data)
+
+    @post_load
+    def log_parsed(self, data):  # pylint: disable=no-self-use
+        log.debug("Parsed data: %r", data)
 
     def handle_error(self, exc, data):
         log.error("Unable to parse: %r", data)

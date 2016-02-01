@@ -31,7 +31,10 @@ class Project(object):
         data['overall'] = self.overall
         return data
 
-    def update(self, data, _exc=ValueError):
+    def update(self, data, exception=ValueError):
+        if not data:
+            raise exception("No metrics provided.")
+
         message = OrderedDict()
         for name in ['unit', 'integration', 'overall']:
             value = data.get(name)
@@ -40,8 +43,9 @@ class Project(object):
                     message[name] = ["Lower than previous value."]
                 else:
                     setattr(self, name, value)
+
         if message:
-            raise _exc(message)
+            raise exception(message)
 
     def reset(self):
         self.unit = 0.0
