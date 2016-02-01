@@ -33,6 +33,7 @@ docs/*.png
 # Testing and coverage results
 .pytest
 .coverage
+.coverage.*
 htmlcov
 pyunit.xml
 *.tmp
