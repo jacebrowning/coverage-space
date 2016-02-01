@@ -107,7 +107,7 @@ watch: depends-dev .clean-test
 .PHONY: run
 run: depends-dev .env
 ifdef DEBUG
-	CONFIG=dev $(PYTHON) manage.py server
+	CONFIG=dev $(PYTHON) manage.py run
 else
 	$(HONCHO) start
 endif

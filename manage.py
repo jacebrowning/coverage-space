@@ -25,7 +25,7 @@ for name, command in [
 
 # Configure the command-line interface
 manager = Manager(app)
-manager.add_command('server', Server(host='0.0.0.0'))
+manager.add_command('run', Server(host='0.0.0.0'))
 
 
 if __name__ == '__main__':
