@@ -20,6 +20,4 @@ def index():
     metadata['date'] = os.getenv('DEPLOY_DATE')
     metadata['changes'] = CHANGES_URL
 
-    track()
-
-    return metadata
+    return track(metadata)

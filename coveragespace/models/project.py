@@ -18,6 +18,11 @@ class Project(object):
         self.integration = 0.0
         self.overall = 0.0
 
+    def __str__(self):
+        return ("Unit: {self.unit}%, "
+                "Integration: {self.integration}%, "
+                "Overall: {self.overall}%").format(self=self)
+
     @property
     def metrics(self):
         data = OrderedDict()

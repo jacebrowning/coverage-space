@@ -16,21 +16,23 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def commit():
+def commit(obj):
     """Store updated metrics in version control."""
 
     def _commit():
         os.chdir("data")
         git.add(".")
-        git.commit(message='"Update metrics"')
+        git.commit(message=str(obj))
         git.push()
 
     if current_app.config['ENV'] == 'prod':
         process = Process(target=_commit)
         process.start()
 
+    return obj
 
-def track():
+
+def track(obj):
     """Log the requested content, server-side."""
     data = dict(
         v=1,
@@ -51,6 +53,8 @@ def track():
         requests.post("http://www.google-analytics.com/collect", data=data)
     else:
         log.debug("Analytics data:\n%s", pprint.pformat(data))
+
+    return obj
 
 
 def _get_tid(*, default='local'):

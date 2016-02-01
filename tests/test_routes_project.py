@@ -16,7 +16,7 @@ def describe_project():
         return Project('my_owner', 'my_repo')
 
     @pytest.fixture
-    def project_modified(project):
+    def project2(project):
         project.unit = 1
         project.integration = 2
         project.overall = 3
@@ -34,7 +34,7 @@ def describe_project():
                 'overall': 0.0,
             }
 
-        def it_returns_actual_metrics_when_existing(client, project_modified):
+        def it_returns_actual_metrics_when_existing(client, project2):
             status, data = load(client.get("/my_owner/my_repo"))
 
             expect(status) == 200
@@ -46,7 +46,7 @@ def describe_project():
 
     def describe_patch():
 
-        def it_updates_metrics(client, project_modified):
+        def it_updates_metrics(client, project2):
             params = {'integration': 42}
             status, data = load(client.patch("/my_owner/my_repo", data=params))
 
@@ -57,7 +57,7 @@ def describe_project():
                 'overall': 3.0,
             }
 
-        def it_supports_updating_mulptiple_metrics(client, project_modified):
+        def it_supports_updating_mulptiple_metrics(client, project2):
             params = {'unit': 55, 'integration': 66}
             status, data = load(client.patch("/my_owner/my_repo", data=params))
 
@@ -79,7 +79,7 @@ def describe_project():
                 }
             }
 
-        def it_returns_an_error_when_metrics_decrease(client, project_modified):
+        def it_returns_an_error_when_metrics_decrease(client, project2):
             params = {'overall': 2.9}
             status, data = load(client.patch("/my_owner/my_repo", data=params))
 
@@ -90,7 +90,7 @@ def describe_project():
                 }
             }
 
-        def it_handles_multiple_bad_metrics(client, project_modified):
+        def it_handles_multiple_bad_metrics(client, project2):
             params = {'unit': 0, 'integration': 0, 'overall': 99}
             status, data = load(client.patch("/my_owner/my_repo", data=params))
 
@@ -111,7 +111,7 @@ def describe_project_branch():
         return Project('my_owner', 'my_repo', 'my_branch')
 
     @pytest.fixture
-    def project_modified(project):
+    def project2(project):
         project.unit = 4
         project.integration = 5
         project.overall = 6
@@ -129,7 +129,7 @@ def describe_project_branch():
                 'overall': 0.0,
             }
 
-        def it_returns_actual_metrics_when_existing(client, project_modified):
+        def it_returns_actual_metrics_when_existing(client, project2):
             status, data = load(client.get("/my_owner/my_repo/my_branch"))
 
             expect(status) == 200
@@ -141,7 +141,7 @@ def describe_project_branch():
 
     def describe_patch():
 
-        def it_updates_metrics(client, project_modified):
+        def it_updates_metrics(client, project2):
             status, data = load(client.patch("/my_owner/my_repo/my_branch",
                                              data={'integration': 42}))
 
@@ -167,7 +167,7 @@ def describe_project_reset():
         return Project('my_owner', 'my_repo')
 
     @pytest.fixture
-    def project_modified(project):
+    def project2(project):
         project.unit = 1
         project.integration = 2
         project.overall = 3
@@ -175,7 +175,7 @@ def describe_project_reset():
 
     def describe_post():
 
-        def it_returns_reset_metrics(client, project_modified):
+        def it_returns_reset_metrics(client, project2):
             status, data = load(client.post("/my_owner/my_repo/reset"))
 
             expect(status) == 200
@@ -194,7 +194,7 @@ def describe_project_branch_reset():
         return Project('my_owner', 'my_repo', 'my_branch')
 
     @pytest.fixture
-    def project_modified(project):
+    def project2(project):
         project.unit = 4
         project.integration = 5
         project.overall = 6
@@ -202,7 +202,7 @@ def describe_project_branch_reset():
 
     def describe_post():
 
-        def it_returns_reset_metrics(client, project_modified):
+        def it_returns_reset_metrics(client, project2):
             endpoint = "/my_owner/my_repo/my_branch/reset"
             status, data = load(client.post(endpoint))
 
