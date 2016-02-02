@@ -13,26 +13,26 @@ blueprint = Blueprint('project', __name__, url_prefix="/")
 log = logging.getLogger(__name__)
 
 
-@blueprint.route("<owner>/<repo>", methods=['GET', 'PATCH'])
+@blueprint.route("<owner>/<repo>", methods=['GET', 'PUT'])
 @parser.use_args(ProjectSchema())
 def metrics(args, owner, repo):
     """Get coverage metrics for the default branch."""
     project = Project(owner, repo)
 
-    if request.method == 'PATCH':
+    if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
         commit(project)
 
     return track(project.metrics)
 
 
-@blueprint.route("<owner>/<repo>/<path:branch>", methods=['GET', 'PATCH'])
+@blueprint.route("<owner>/<repo>/<path:branch>", methods=['GET', 'PUT'])
 @parser.use_args(ProjectSchema())
 def branch_metrics(args, owner, repo, branch):
     """Get coverage metrics for a particular branch."""
     project = Project(owner, repo, branch)
 
-    if request.method == 'PATCH':
+    if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
         commit(project)
 

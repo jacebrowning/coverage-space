@@ -8,16 +8,32 @@ A place to track your code coverage metrics.
 [![PyPI Version](http://img.shields.io/pypi/v/coverage.space.svg)](https://pypi.python.org/pypi/coverage.space)
 [![PyPI Downloads](http://img.shields.io/pypi/dm/coverage.space.svg)](https://pypi.python.org/pypi/coverage.space)
 
-## Scripted Interaction
+## Basic Usage
 
-The examples will use [HTTPie](https://github.com/jkbrzt/httpie) for simplicity, but the same could be accomplished with `curl`. To install it:
-
-```sh
-$ pip install httpie
-```
-
-To update coverage metrics:
+The API can be used with `curl`, but [HTTPie](https://github.com/jkbrzt/httpie) is preferred:
 
 ```sh
-$ http patch api.coverage.space/owner/repo unit=90 --check-status
+$ pip install HTTPie
 ```
+
+Get the latest coverage metrics:
+
+```sh
+$ http GET api.coverage.space/my_owner/my_repo
+```
+
+Update coverage metrics:
+
+```sh
+$ http PUT api.coverage.space/my_owner/my_repo unit=90 --check-status
+```
+
+Reset coverage metrics:
+
+```sh
+$ http PATCH api.coverage.space/my_owner/my_repo/reset
+```
+
+## Documentation
+
+Read the full docs [here](http://coverage.space/).

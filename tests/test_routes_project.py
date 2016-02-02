@@ -44,11 +44,11 @@ def describe_project():
                 'overall': 3.0,
             }
 
-    def describe_patch():
+    def describe_put():
 
         def it_updates_metrics(client, project2):
             params = {'integration': 42}
-            status, data = load(client.patch("/my_owner/my_repo", data=params))
+            status, data = load(client.put("/my_owner/my_repo", data=params))
 
             expect(status) == 200
             expect(data) == {
@@ -59,7 +59,7 @@ def describe_project():
 
         def it_supports_updating_mulptiple_metrics(client, project2):
             params = {'unit': 55, 'integration': 66}
-            status, data = load(client.patch("/my_owner/my_repo", data=params))
+            status, data = load(client.put("/my_owner/my_repo", data=params))
 
             expect(status) == 200
             expect(data) == {
@@ -70,7 +70,7 @@ def describe_project():
 
         def it_returns_an_error_on_invalid_metrics(client):
             params = {'integration': "foobar"}
-            status, data = load(client.patch("/my_owner/my_repo", data=params))
+            status, data = load(client.put("/my_owner/my_repo", data=params))
 
             expect(status) == 422
             expect(data) == {
@@ -81,7 +81,7 @@ def describe_project():
 
         def it_returns_an_error_when_metrics_decrease(client, project2):
             params = {'overall': 2.9}
-            status, data = load(client.patch("/my_owner/my_repo", data=params))
+            status, data = load(client.put("/my_owner/my_repo", data=params))
 
             expect(status) == 422
             expect(data) == {
@@ -92,7 +92,7 @@ def describe_project():
 
         def it_handles_multiple_bad_metrics(client, project2):
             params = {'unit': 0, 'integration': 0, 'overall': 99}
-            status, data = load(client.patch("/my_owner/my_repo", data=params))
+            status, data = load(client.put("/my_owner/my_repo", data=params))
 
             expect(status) == 422
             expect(data) == {
@@ -103,7 +103,7 @@ def describe_project():
             }
 
         def it_returns_an_error_when_no_metrics_specified(client):
-            status, data = load(client.patch("/my_owner/my_repo"))
+            status, data = load(client.put("/my_owner/my_repo"))
 
             expect(status) == 422
             expect(data) == {
@@ -147,11 +147,11 @@ def describe_project_branch():
                 'overall': 6.0,
             }
 
-    def describe_patch():
+    def describe_put():
 
         def it_updates_metrics(client, project2):
-            status, data = load(client.patch("/my_owner/my_repo/my_branch",
-                                             data={'integration': 42}))
+            status, data = load(client.put("/my_owner/my_repo/my_branch",
+                                           data={'integration': 42}))
 
             expect(status) == 200
             expect(data) == {
@@ -161,7 +161,7 @@ def describe_project_branch():
             }
 
         def it_uses_master_as_the_default(client, project):
-            client.patch("/my_owner/my_repo", data={'unit': 1.23})
+            client.put("/my_owner/my_repo", data={'unit': 1.23})
             _, data = load(client.get("/my_owner/my_repo/master"))
 
             expect(data['unit']) == 1.23

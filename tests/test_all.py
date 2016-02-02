@@ -36,5 +36,5 @@
 #         expect(httpie("GET localhost:5555/owner/repo")) == \
 #             '{"unit": 0.0, "integration": 0.0, "overall": 0.0}'
 #
-#         expect(httpie("PATCH localhost:5555/owner/repo unit=1")) == \
+#         expect(httpie("PUT localhost:5555/owner/repo unit=1")) == \
 #             '{"unit": 1.0, "integration": 0.0, "overall": 0.0}'
