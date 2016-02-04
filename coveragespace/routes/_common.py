@@ -19,18 +19,21 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def commit(obj):
+def sync(obj, commit=True):
     """Store updated metrics in version control."""
 
-    def run(sync=False):
+    def run(_sync=False):
         git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
-        git.add(".")
-        git.commit(message=str(obj))
-        if sync:
-            git.push()
+        if commit:
+            git.add(".")
+            git.commit(message=str(obj))
+        if _sync:
+            if commit:
+                git.push(force=True)
+            git.pull()
 
-    sync = current_app.config['ENV'] == 'prod'
-    process = Process(target=run, args=[sync])
+    _sync = current_app.config['ENV'] == 'prod'
+    process = Process(target=run, args=[_sync])
     process.start()
 
     return obj

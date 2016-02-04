@@ -5,7 +5,7 @@ from flask import Blueprint, request
 from .. import __version__
 from ..models import Project
 
-from ._common import commit, track
+from ._common import sync, track
 from ._schemas import parser, ProjectSchema, UnprocessableEntity
 
 
@@ -21,7 +21,9 @@ def metrics(args, owner, repo):
 
     if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
-        commit(project)
+        sync(project)
+    else:
+        sync(project, commit=False)
 
     return track(project.metrics)
 
@@ -34,7 +36,9 @@ def branch_metrics(args, owner, repo, branch):
 
     if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
-        commit(project)
+        sync(project)
+    else:
+        sync(project, commit=False)
 
     return track(project.metrics)
 
@@ -45,7 +49,7 @@ def reset_metrics(owner, repo):
     project = Project(owner, repo)
 
     project.reset()
-    commit(project)
+    sync(project)
 
     return track(project.metrics)
 
@@ -56,6 +60,6 @@ def reset_branch_metrics(owner, repo, branch):
     project = Project(owner, repo, branch)
 
     project.reset()
-    commit(project)
+    sync(project)
 
     return track(project.metrics)
