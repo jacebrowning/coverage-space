@@ -1,6 +1,6 @@
 # The Coverage Space
 
-A place to track your code coverage metrics.
+> A place to track your code coverage metrics.
 
 [![Build Status](http://img.shields.io/travis/jacebrowning/coverage-space/master.svg)](https://travis-ci.org/jacebrowning/coverage-space)
 [![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
