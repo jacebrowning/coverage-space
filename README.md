@@ -31,7 +31,7 @@ $ http PUT api.coverage.space/my_owner/my_repo unit=90 --check-status
 Reset coverage metrics:
 
 ```sh
-$ http PATCH api.coverage.space/my_owner/my_repo/reset
+$ http DELETE api.coverage.space/my_owner/my_repo
 ```
 
 ## Documentation

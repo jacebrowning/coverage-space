@@ -8,58 +8,37 @@ from ..models import Project
 from ._common import sync, track
 from ._schemas import parser, ProjectSchema, UnprocessableEntity
 
+BASE = "<owner>/<repo>"
 
 blueprint = Blueprint('project', __name__, url_prefix="/")
 log = logging.getLogger(__name__)
 
 
-@blueprint.route("<owner>/<repo>", methods=['GET', 'PUT'])
+@blueprint.route(BASE, methods=['GET', 'PUT', 'DELETE'])
 @parser.use_args(ProjectSchema())
 def metrics(args, owner, repo):
     """Get coverage metrics for the default branch."""
     project = Project(owner, repo)
-
-    if request.method == 'PUT':
-        project.update(args, exception=UnprocessableEntity)
-        sync(project)
-    else:
-        sync(project, commit=False)
-
-    return track(project.metrics)
+    return _handle_request(project, args)
 
 
-@blueprint.route("<owner>/<repo>/<path:branch>", methods=['GET', 'PUT'])
+@blueprint.route(BASE + "/<path:branch>", methods=['GET', 'PUT', 'DELETE'])
 @parser.use_args(ProjectSchema())
 def branch_metrics(args, owner, repo, branch):
     """Get coverage metrics for a particular branch."""
     project = Project(owner, repo, branch)
+    return _handle_request(project, args)
 
+
+def _handle_request(project, args):
     if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
         sync(project)
+    elif request.method == 'DELETE':
+        project.reset()
+        sync(project)
     else:
+        assert request.method == 'GET'
         sync(project, commit=False)
-
-    return track(project.metrics)
-
-
-@blueprint.route("<owner>/<repo>/reset", methods=['POST'])
-def reset_metrics(owner, repo):
-    """Reset coverage metrics for the default branch."""
-    project = Project(owner, repo)
-
-    project.reset()
-    sync(project)
-
-    return track(project.metrics)
-
-
-@blueprint.route("<owner>/<repo>/<path:branch>/reset", methods=['POST'])
-def reset_branch_metrics(owner, repo, branch):
-    """Reset coverage metrics for a particular branch."""
-    project = Project(owner, repo, branch)
-
-    project.reset()
-    sync(project)
 
     return track(project.metrics)

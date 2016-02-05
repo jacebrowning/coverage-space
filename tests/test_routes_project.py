@@ -110,6 +110,18 @@ def describe_project():
                 'message': "No metrics provided."
             }
 
+    def describe_delete():
+
+        def it_resets_metrics(client, project2):
+            status, data = load(client.delete("/my_owner/my_repo"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
+
 
 def describe_project_branch():
 
@@ -166,53 +178,11 @@ def describe_project_branch():
 
             expect(data['unit']) == 1.23
 
+    def describe_reset():
 
-def describe_project_reset():
-
-    @pytest.fixture
-    def project(tmpdir):
-        tmpdir.chdir()
-        return Project('my_owner', 'my_repo')
-
-    @pytest.fixture
-    def project2(project):
-        project.unit = 1
-        project.integration = 2
-        project.overall = 3
-        return project
-
-    def describe_post():
-
-        def it_returns_reset_metrics(client, project2):
-            status, data = load(client.post("/my_owner/my_repo/reset"))
-
-            expect(status) == 200
-            expect(data) == {
-                'unit': 0.0,
-                'integration': 0.0,
-                'overall': 0.0,
-            }
-
-
-def describe_project_branch_reset():
-
-    @pytest.fixture
-    def project(tmpdir):
-        tmpdir.chdir()
-        return Project('my_owner', 'my_repo', 'my_branch')
-
-    @pytest.fixture
-    def project2(project):
-        project.unit = 4
-        project.integration = 5
-        project.overall = 6
-        return project
-
-    def describe_post():
-
-        def it_returns_reset_metrics(client, project2):
-            endpoint = "/my_owner/my_repo/my_branch/reset"
-            status, data = load(client.post(endpoint))
+        def it_resets_metrics(client, project2):
+            endpoint = "/my_owner/my_repo/my_branch"
+            status, data = load(client.delete(endpoint))
 
             expect(status) == 200
             expect(data) == {
