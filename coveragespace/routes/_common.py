@@ -3,11 +3,11 @@ import pprint
 import logging
 from multiprocessing import Process
 
-from sh import git as _git  # pylint: disable=no-name-in-module
+from sh import git as _git, ErrorReturnCode  # pylint: disable=no-name-in-module
 import requests
 from flask import current_app, request
 
-from .. import __url__
+from .. import URL
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA = os.path.join(ROOT, "data")
@@ -19,14 +19,22 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def sync(obj, commit=True):
+def sync(obj):
     """Store updated metrics in version control."""
 
-    def run(_sync=False):
+    def run(_sync=False):  # pragma: no cover (separate process)
         git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
-        if commit:
-            git.add(".")
+
+        git.add(".")
+
+        try:
+            git.diff(exit_code=True)
+        except ErrorReturnCode:
             git.commit(message=str(obj))
+            commit = True
+        else:
+            commit = False
+
         if _sync:
             if commit:
                 git.push(force=True)
@@ -47,7 +55,7 @@ def track(obj):
         cid=request.remote_addr,
 
         t='pageview',
-        dh=__url__,
+        dh=URL,
         dp=request.path,
         dt=request.method + ' ' + request.url_rule.endpoint,
 

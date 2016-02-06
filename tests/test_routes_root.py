@@ -14,7 +14,7 @@ def describe_root():
 
         expect(status) == 200
         expect(data) == {
-            'version': "0.0.0",
+            'version': "0.1",
             'date': "today",
             'changes': "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/CHANGES.md"
         }

@@ -33,12 +33,11 @@ def branch_metrics(args, owner, repo, branch):
 def _handle_request(project, args):
     if request.method == 'PUT':
         project.update(args, exception=UnprocessableEntity)
-        sync(project)
     elif request.method == 'DELETE':
         project.reset()
-        sync(project)
     else:
         assert request.method == 'GET'
-        sync(project, commit=False)
+
+    sync(project)
 
     return track(project.metrics)
