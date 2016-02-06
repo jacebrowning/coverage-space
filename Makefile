@@ -9,11 +9,6 @@ ifndef TRAVIS
 	PYTHON_MINOR ?= 5
 endif
 
-# Test settings
-UNIT_TEST_COVERAGE := 66
-INTEGRATION_TEST_COVERAGE := 74
-COMBINED_TEST_COVERAGE := 74
-
 # System paths
 PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
 ifneq ($(findstring win32, $(PLATFORM)), )
@@ -68,6 +63,7 @@ PYREVERSE := $(BIN_)pyreverse
 NOSE := $(BIN_)nosetests
 PYTEST := $(BIN_)py.test
 COVERAGE := $(BIN_)coverage
+COVERAGE_SPACE := $(BIN_)coverage.space
 SNIFFER := $(BIN_)sniffer
 HONCHO := $(ACTIVATE) && honcho
 
@@ -130,6 +126,7 @@ launch: depends-dev
 .PHONY: env
 env: $(PIP) $(INSTALLED_FLAG)
 $(INSTALLED_FLAG): Makefile setup.py requirements.txt
+	VIRTUAL_ENV=$(ENV) $(PIP) install -r requirements.txt
 	VIRTUAL_ENV=$(ENV) $(PYTHON) setup.py develop
 	@ touch $(INSTALLED_FLAG)  # flag to indicate package is installed
 
@@ -239,7 +236,7 @@ fix: depends-dev
 RANDOM_SEED ?= $(shell date +%s)
 
 PYTEST_CORE_OPTS := -r xXw -vv
-PYTEST_COV_OPTS := --cov=$(PACKAGE) --cov-report=term-missing --no-cov-on-fail
+PYTEST_COV_OPTS := --cov=$(PACKAGE) --no-cov-on-fail --cov-report=term-missing --cov-report=html
 PYTEST_RANDOM_OPTS := --random --random-seed=$(RANDOM_SEED)
 
 PYTEST_OPTS := $(PYTEST_CORE_OPTS) $(PYTEST_COV_OPTS) $(PYTEST_RANDOM_OPTS)
@@ -250,31 +247,28 @@ FAILED_FLAG := .pytest/failed
 .PHONY: test test-unit
 test: test-unit
 test-unit: depends-ci
-	@ $(COVERAGE) erase
 	$(PYTEST) $(PYTEST_OPTS) $(PACKAGE)
 ifndef TRAVIS
-	$(COVERAGE) html --directory htmlcov --fail-under=$(UNIT_TEST_COVERAGE)
+	$(COVERAGE_SPACE) jacebrowning/coverage-space unit
 endif
 
 .PHONY: test-int
 test-int: depends-ci
 	@ if test -e $(FAILED_FLAG); then $(MAKE) test-all; fi
-	@ $(COVERAGE) erase
 	$(PYTEST) $(PYTEST_OPTS_FAILFAST) tests
 ifndef TRAVIS
 	@ rm -rf $(FAILED_FLAG)  # next time, don't run the previously failing test
-	$(COVERAGE) html --directory htmlcov --fail-under=$(INTEGRATION_TEST_COVERAGE)
+	$(COVERAGE_SPACE) jacebrowning/coverage-space integration
 endif
 
 .PHONY: tests test-all
 tests: test-all
 test-all: depends-ci
 	@ if test -e $(FAILED_FLAG); then $(PYTEST) --failed $(PACKAGE) tests; fi
-	@ $(COVERAGE) erase
 	$(PYTEST) $(PYTEST_OPTS_FAILFAST) $(PACKAGE) tests
 ifndef TRAVIS
 	@ rm -rf $(FAILED_FLAG)  # next time, don't run the previously failing test
-	$(COVERAGE) html --directory htmlcov --fail-under=$(COMBINED_TEST_COVERAGE)
+	$(COVERAGE_SPACE) jacebrowning/coverage-space overall
 endif
 
 .PHONY: read-coverage

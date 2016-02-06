@@ -4,7 +4,7 @@
 
 import setuptools
 
-from coveragespace import __project__, __version__
+from coveragespace import __project__, __version__, CLI
 
 import os
 if os.path.exists('README.rst'):
@@ -25,7 +25,9 @@ setuptools.setup(
 
     packages=setuptools.find_packages(),
 
-    entry_points={'console_scripts': []},
+    entry_points={'console_scripts': [
+        CLI + ' = coveragespace.cli.main:main',
+    ]},
 
     long_description=(README + '\n' + CHANGES),
     license='MIT',
@@ -40,5 +42,5 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    install_requires=open('requirements.txt').readlines(),
+    install_requires=['docopt', 'httpie'],
 )
