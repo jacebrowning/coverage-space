@@ -1,6 +1,6 @@
 # Project settings
-PROJECT := coverage.space
-PACKAGE := coveragespace
+PROJECT := api
+PACKAGE := api
 SOURCES := Makefile setup.py $(shell find $(PACKAGE) -name '*.py')
 
 # Python settings

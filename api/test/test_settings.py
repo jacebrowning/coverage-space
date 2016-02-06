@@ -2,7 +2,7 @@
 
 from expecter import expect
 
-from coveragespace.settings import get_config
+from api.settings import get_config
 
 
 def describe_get_config():

@@ -4,7 +4,7 @@
 
 import setuptools
 
-from coveragespace import __project__, __version__
+from api import __project__, __version__
 
 try:
     README = open("README.rst").read()

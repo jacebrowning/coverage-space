@@ -1,1 +1,1 @@
-"""Integration tests for the `coveragespace` package."""
+"""Integration tests for the `api` package."""

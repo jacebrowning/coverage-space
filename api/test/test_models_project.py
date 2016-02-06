@@ -3,7 +3,7 @@
 import pytest
 from expecter import expect
 
-from coveragespace.models import Project
+from api.models import Project
 
 
 def describe_project():

@@ -2,8 +2,8 @@
 
 from expecter import expect
 
-from coveragespace import app
-from coveragespace import settings
+from api import app
+from api import settings
 
 
 def describe_app():

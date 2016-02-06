@@ -2,8 +2,8 @@
 
 import pytest
 
-from coveragespace.app import create_app
-from coveragespace.settings import get_config
+from api.app import create_app
+from api.settings import get_config
 
 
 @pytest.fixture

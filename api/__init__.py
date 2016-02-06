@@ -2,7 +2,7 @@
 
 import sys
 
-__project__ = 'coverage.space'
+__project__ = 'api'
 __version__ = '0.1'
 
 URL = 'coveage.space'

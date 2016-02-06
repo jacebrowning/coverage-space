@@ -6,8 +6,8 @@ from subprocess import check_output
 
 from flask_script import Manager, Server
 
-from coveragespace.settings import get_config
-from coveragespace.app import create_app
+from api.settings import get_config
+from api.app import create_app
 
 
 # Select app configuration from the environment
