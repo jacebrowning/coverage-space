@@ -1,14 +1,22 @@
 # pylint: disable=unused-variable,unused-argument,expression-not-assigned
+from unittest.mock import patch, Mock
+
 import pytest
 from expecter import expect
 
 from coveragespace.cli.plugins import get_coverage
 
 
+class MockCoverage(Mock):
+
+    def __round__(self, value):
+        return 42
+
+
 def describe_get_coverage():
 
     @pytest.fixture
-    def coveragepy(tmpdir):
+    def coveragepy_data(tmpdir):
         cwd = tmpdir.chdir()
         with open("foobar.py", 'w') as stream:
             pass
@@ -18,5 +26,6 @@ def describe_get_coverage():
             {"arcs":{"foobar.py": [[-1, 3]]}}
             """.strip())
 
-    def it_supports_coveragepy(coveragepy):
-        expect(get_coverage()) == 0
+    @patch('coverage.Coverage', MockCoverage)
+    def it_supports_coveragepy(coveragepy_data):
+        expect(get_coverage()) == 42
