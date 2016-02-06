@@ -110,7 +110,7 @@ run: depends-dev .env
 ifdef DEBUG
 	$(HONCHO) run $(PYTHON) manage.py run
 else
-	$(HONCHO) start
+	status=3; while [ $$status -eq 3 ]; do $(HONCHO) start; status=$$?; done
 endif
 
 .PHONY: run-debug
