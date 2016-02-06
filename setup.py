@@ -4,15 +4,15 @@
 
 import setuptools
 
-from coveragespace import __project__, __version__, CLI
+from coveragespace import __project__, __version__
 
-import os
-if os.path.exists('README.rst'):
-    README = open('README.rst').read()
+try:
+    README = open("README.rst").read()
+    CHANGES = open("CHANGES.rst").read()
+except IOError:
+    DESCRIPTION = "<placeholder>"
 else:
-    README = ""  # a placeholder until README is generated on release
-CHANGES = open('CHANGES.md').read()
-
+    DESCRIPTION = README + '\n' + CHANGES
 
 setuptools.setup(
     name=__project__,
@@ -26,10 +26,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
 
     entry_points={'console_scripts': [
-        CLI + ' = coveragespace.cli.main:main',
     ]},
 
-    long_description=(README + '\n' + CHANGES),
+    long_description=(DESCRIPTION),
     license='MIT',
     classifiers=[
         # TODO: update this list to match your application: https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -42,5 +41,5 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    install_requires=['docopt', 'httpie'],
+    install_requires=open("requirements.txt").readlines(),
 )

@@ -70,6 +70,7 @@ HONCHO := $(ACTIVATE) && honcho
 # Flags for PHONY targets
 INSTALLED_FLAG := $(ENV)/.installed
 DEPENDS_CI_FLAG := $(ENV)/.depends-ci
+DEPENDS_DOC_FLAG := $(ENV)/.depends-doc
 DEPENDS_DEV_FLAG := $(ENV)/.depends-dev
 DOCS_FLAG := $(ENV)/.docs
 ALL_FLAG := $(ENV)/.all
@@ -94,7 +95,7 @@ ci: doc check test tests
 endif
 
 .PHONY: watch
-watch: depends-dev .clean-test
+watch: depends .clean-test
 	@ rm -rf $(FAILED_FLAG)
 	$(SNIFFER)
 
@@ -126,7 +127,6 @@ launch: depends-dev
 .PHONY: env
 env: $(PIP) $(INSTALLED_FLAG)
 $(INSTALLED_FLAG): Makefile setup.py requirements.txt
-	VIRTUAL_ENV=$(ENV) $(PIP) install -r requirements.txt
 	VIRTUAL_ENV=$(ENV) $(PYTHON) setup.py develop
 	@ touch $(INSTALLED_FLAG)  # flag to indicate package is installed
 
@@ -137,18 +137,24 @@ $(PIP):
 # Tools Installation ###########################################################
 
 .PHONY: depends
-depends: depends-ci depends-dev
+depends: depends-ci depends-doc depends-dev
 
 .PHONY: depends-ci
 depends-ci: env Makefile $(DEPENDS_CI_FLAG)
 $(DEPENDS_CI_FLAG): Makefile
-	$(PIP) install --upgrade pep8 pep257 pylint coverage pytest pytest-describe pytest-expecter pytest-cov pytest-random pytest-runfailed mkdocs
+	$(PIP) install --upgrade pep8 pep257 pylint coverage coverage.space pytest pytest-describe pytest-expecter pytest-cov pytest-random pytest-runfailed
 	@ touch $(DEPENDS_CI_FLAG)  # flag to indicate dependencies are installed
+
+.PHONY: depends-doc
+depends-doc: env Makefile $(DEPENDS_DOC_FLAG)
+$(DEPENDS_DOC_FLAG): Makefile
+	$(PIP) install --upgrade docutils readme pdoc mkdocs pygments
+	@ touch $(DEPENDS_DOC_FLAG)  # flag to indicate dependencies are installed
 
 .PHONY: depends-dev
 depends-dev: env Makefile $(DEPENDS_DEV_FLAG)
 $(DEPENDS_DEV_FLAG): Makefile
-	$(PIP) install --upgrade pip pep8radius pygments docutils pdoc wheel readme sniffer
+	$(PIP) install --upgrade pip pep8radius wheel sniffer
 ifdef WINDOWS
 	$(PIP) install --upgrade pywin32
 else ifdef MAC
@@ -178,34 +184,34 @@ read: doc
 	$(OPEN) README-github.html
 
 .PHONY: readme
-readme: depends-dev README-github.html README-pypi.html
+readme: depends-doc README-github.html README-pypi.html
 README-github.html: README.md
 	pandoc -f markdown_github -t html -o README-github.html README.md
 README-pypi.html: README.rst
 	$(RST2HTML) README.rst README-pypi.html
-README.rst: README.md
-	pandoc -f markdown_github -t rst -o README.rst README.md
+%.rst: %.md
+	pandoc -f markdown_github -t rst -o $@ $<
 
 .PHONY: verify-readme
 verify-readme: $(DOCS_FLAG)
-$(DOCS_FLAG): README.rst
+$(DOCS_FLAG): README.rst CHANGES.rst
 	$(PYTHON) setup.py check --restructuredtext --strict --metadata
 	@ touch $(DOCS_FLAG)  # flag to indicate README has been checked
 
 .PHONY: uml
-uml: depends-ci docs/*.png
+uml: depends-doc docs/*.png
 docs/*.png: $(SOURCES)
 	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore test
 	- mv -f classes_$(PACKAGE).png docs/classes.png
 	- mv -f packages_$(PACKAGE).png docs/packages.png
 
 .PHONY: apidocs
-apidocs: depends-dev apidocs/$(PACKAGE)/index.html
+apidocs: depends-doc apidocs/$(PACKAGE)/index.html
 apidocs/$(PACKAGE)/index.html: $(SOURCES)
 	$(PDOC) --html --overwrite $(PACKAGE) --html-dir apidocs
 
 .PHONY: mkdocs
-mkdocs: depends-ci site/index.html
+mkdocs: depends-doc site/index.html
 site/index.html: mkdocs.yml docs/*.md
 	$(MKDOCS) build --clean --strict
 	echo $(URL) > site/CNAME

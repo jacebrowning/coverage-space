@@ -7,7 +7,6 @@ __version__ = '0.1'
 
 URL = 'coveage.space'
 API = 'api.coverage.space'
-CLI = 'coverage.space'
 
 VERSION = "{0} v{1}".format(__project__, __version__)
 
