@@ -37,12 +37,14 @@ class Project(object):
 
         message = OrderedDict()
         for name in ['unit', 'integration', 'overall']:
-            value = data.get(name)
-            if value is not None:
-                if value < getattr(self, name):
-                    message[name] = ["Lower than previous value."]
+            current = data.get(name)
+            if current is not None:
+                previous = getattr(self, name)
+                if current < previous:
+                    msg = "Value dropped below minimum: {}".format(previous)
+                    message[name] = [msg]
                 else:
-                    setattr(self, name, value)
+                    setattr(self, name, current)
 
         if message:
             raise exception(message)
