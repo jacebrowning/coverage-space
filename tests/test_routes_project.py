@@ -86,7 +86,7 @@ def describe_project():
             expect(status) == 422
             expect(data) == {
                 'message': {
-                    'overall': ["Lower than previous value."],
+                    'overall': ["Value dropped below minimum: 3.0"],
                 }
             }
 
@@ -97,8 +97,8 @@ def describe_project():
             expect(status) == 422
             expect(data) == {
                 'message': {
-                    'unit': ["Lower than previous value."],
-                    'integration': ["Lower than previous value."],
+                    'unit': ["Value dropped below minimum: 1.0"],
+                    'integration': ["Value dropped below minimum: 2.0"],
                 }
             }
 
