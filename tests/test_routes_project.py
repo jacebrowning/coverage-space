@@ -17,9 +17,7 @@ def describe_project():
 
     @pytest.fixture
     def project2(project):
-        project.unit = 1
-        project.integration = 2
-        project.overall = 3
+        project.update(dict(unit=1, integration=2, overall=3))
         return project
 
     def describe_get():
@@ -57,7 +55,7 @@ def describe_project():
                 'overall': 3.0,
             }
 
-        def it_supports_updating_mulptiple_metrics(client, project2):
+        def it_supports_updating_multiple_metrics(client, project2):
             params = {'unit': 55, 'integration': 66}
             status, data = load(client.put("/my_owner/my_repo", data=params))
 
@@ -112,14 +110,24 @@ def describe_project():
 
     def describe_delete():
 
-        def it_resets_metrics(client, project2):
-            status, data = load(client.delete("/my_owner/my_repo"))
+        def it_allows_metrics_to_decrease(client, project2):
+            endpoint = "/my_owner/my_repo"
+            status, data = load(client.delete(endpoint))
 
             expect(status) == 200
             expect(data) == {
-                'unit': 0.0,
-                'integration': 0.0,
-                'overall': 0.0,
+                'unit': 1.0,
+                'integration': 2.0,
+                'overall': 3.0,
+            }
+
+            status, data = load(client.put(endpoint, data={'overall': 2.5}))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.0,
+                'integration': 2.0,
+                'overall': 2.5,
             }
 
 
@@ -132,9 +140,7 @@ def describe_project_branch():
 
     @pytest.fixture
     def project2(project):
-        project.unit = 4
-        project.integration = 5
-        project.overall = 6
+        project.update(dict(unit=4, integration=5, overall=6))
         return project
 
     def describe_get():
@@ -174,19 +180,33 @@ def describe_project_branch():
 
         def it_uses_master_as_the_default(client, project):
             client.put("/my_owner/my_repo", data={'unit': 1.23})
-            _, data = load(client.get("/my_owner/my_repo/master"))
+            status, data = load(client.get("/my_owner/my_repo/master"))
 
-            expect(data['unit']) == 1.23
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.23,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
 
     def describe_reset():
 
-        def it_resets_metrics(client, project2):
+        def it_allows_metrics_to_decrease(client, project2):
             endpoint = "/my_owner/my_repo/my_branch"
             status, data = load(client.delete(endpoint))
 
             expect(status) == 200
             expect(data) == {
-                'unit': 0.0,
-                'integration': 0.0,
-                'overall': 0.0,
+                'unit': 4.0,
+                'integration': 5.0,
+                'overall': 6.0,
+            }
+
+            status, data = load(client.put(endpoint, data={'unit': 1}))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.0,
+                'integration': 5.0,
+                'overall': 6.0,
             }

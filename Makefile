@@ -120,7 +120,8 @@ launch: depends-dev
 	$(MAKE) run
 
 .env:
-	echo "CONFIG=dev" >> .env
+	echo "CONFIG=dev" >> $@
+	echo "#GOOGLE_ANALYTICS_TID=local" >> $@
 
 # Development Installation #####################################################
 
@@ -142,13 +143,13 @@ depends: depends-ci depends-doc depends-dev
 .PHONY: depends-ci
 depends-ci: env Makefile $(DEPENDS_CI_FLAG)
 $(DEPENDS_CI_FLAG): Makefile
-	$(PIP) install --upgrade pep8 pep257 pylint coverage coverage.space pytest pytest-describe pytest-expecter pytest-cov pytest-random pytest-runfailed
+	$(PIP) install --upgrade pep8 pep257 pylint coverage coverage.space pytest pytest-describe pytest-expecter pytest-cov pytest-random
 	@ touch $(DEPENDS_CI_FLAG)  # flag to indicate dependencies are installed
 
 .PHONY: depends-doc
 depends-doc: env Makefile $(DEPENDS_DOC_FLAG)
 $(DEPENDS_DOC_FLAG): Makefile
-	$(PIP) install --upgrade docutils readme pdoc mkdocs pygments
+	$(PIP) install --upgrade pylint docutils readme pdoc mkdocs pygments
 	@ touch $(DEPENDS_DOC_FLAG)  # flag to indicate dependencies are installed
 
 .PHONY: depends-dev
@@ -199,7 +200,7 @@ $(DOCS_FLAG): README.rst CHANGES.rst
 	@ touch $(DOCS_FLAG)  # flag to indicate README has been checked
 
 .PHONY: uml
-uml: depends-ci docs/*.png
+uml: depends-doc docs/*.png
 docs/*.png: $(SOURCES)
 	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore test
 	- mv -f classes_$(PACKAGE).png docs/classes.png
@@ -246,34 +247,34 @@ PYTEST_COV_OPTS := --cov=$(PACKAGE) --no-cov-on-fail --cov-report=term-missing -
 PYTEST_RANDOM_OPTS := --random --random-seed=$(RANDOM_SEED)
 
 PYTEST_OPTS := $(PYTEST_CORE_OPTS) $(PYTEST_COV_OPTS) $(PYTEST_RANDOM_OPTS)
-PYTEST_OPTS_FAILFAST := $(PYTEST_OPTS) --failed --exitfirst
+PYTEST_OPTS_FAILFAST := $(PYTEST_OPTS) --last-failed
 
-FAILED_FLAG := .pytest/failed
+FAILURES := .cache/v/cache/lastfailed
 
 .PHONY: test test-unit
 test: test-unit
 test-unit: depends-ci
+	@- mv $(FAILURES) $(FAILURES).bak
 	$(PYTEST) $(PYTEST_OPTS) $(PACKAGE)
+	@- mv $(FAILURES).bak $(FAILURES)
 ifndef TRAVIS
 	$(COVERAGE_SPACE) jacebrowning/coverage-space unit
 endif
 
 .PHONY: test-int
 test-int: depends-ci
-	@ if test -e $(FAILED_FLAG); then $(MAKE) test-all; fi
-	$(PYTEST) $(PYTEST_OPTS_FAILFAST) tests
+	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) tests; fi
+	$(PYTEST) $(PYTEST_OPTS) tests
 ifndef TRAVIS
-	@ rm -rf $(FAILED_FLAG)  # next time, don't run the previously failing test
 	$(COVERAGE_SPACE) jacebrowning/coverage-space integration
 endif
 
 .PHONY: tests test-all
 tests: test-all
 test-all: depends-ci
-	@ if test -e $(FAILED_FLAG); then $(PYTEST) --failed $(PACKAGE) tests; fi
-	$(PYTEST) $(PYTEST_OPTS_FAILFAST) $(PACKAGE) tests
+	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) $(PACKAGE) tests; fi
+	$(PYTEST) $(PYTEST_OPTS) $(PACKAGE) tests
 ifndef TRAVIS
-	@ rm -rf $(FAILED_FLAG)  # next time, don't run the previously failing test
 	$(COVERAGE_SPACE) jacebrowning/coverage-space overall
 endif
 
@@ -298,11 +299,11 @@ clean-all: clean .clean-env .clean-workspace
 
 .PHONY: .clean-doc
 .clean-doc:
-	rm -rf README.rst apidocs *.html docs/*.png
+	rm -rf README.rst apidocs *.html docs/*.png site
 
 .PHONY: .clean-test
 .clean-test:
-	rm -rf .pytest .coverage htmlcov
+	rm -rf .cache .pytest .coverage htmlcov
 
 .PHONY: .clean-dist
 .clean-dist:

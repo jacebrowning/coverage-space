@@ -64,7 +64,6 @@ def track(obj):
 
     if _get_tid(default=None):
         requests.post("http://www.google-analytics.com/collect", data=data)
-    else:
         log.debug("Analytics data:\n%s", pprint.pformat(data))
 
     return obj
