@@ -25,7 +25,7 @@ def sync(obj):
     def run(_sync=False):  # pragma: no cover (separate process)
         git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
-        git.add(".")
+        git.add(all=True)
 
         try:
             git.diff(exit_code=True)
