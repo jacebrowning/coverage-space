@@ -13,7 +13,7 @@ else:
     notify = Notifier.notify
 
 
-watch_paths = ["coveragespace", "tests"]
+watch_paths = ["api", "tests"]
 
 
 @select_runnable('python')
