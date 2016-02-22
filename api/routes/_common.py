@@ -26,14 +26,12 @@ def sync(obj):
         git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
         git.add(all=True)
-
         try:
-            git.diff(exit_code=True)
-        except ErrorReturnCode:
             git.commit(message=str(obj))
-            commit = True
-        else:
+        except ErrorReturnCode:
             commit = False
+        else:
+            commit = True
 
         if _sync:
             if commit:
