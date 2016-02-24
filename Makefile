@@ -199,7 +199,7 @@ $(DOCS_FLAG): README.rst CHANGES.rst
 	@ touch $(DOCS_FLAG)  # flag to indicate README has been checked
 
 .PHONY: uml
-uml: depends-doc docs/*.png
+uml: depends-ci docs/*.png
 docs/*.png: $(SOURCES)
 	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore test
 	- mv -f classes_$(PACKAGE).png docs/classes.png
