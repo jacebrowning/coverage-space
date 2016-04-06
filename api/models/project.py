@@ -1,13 +1,14 @@
 from collections import OrderedDict
 
 import yorm
+from yorm.types import Float
 
 
-@yorm.attr(unit=yorm.types.Float)
-@yorm.attr(integration=yorm.types.Float)
-@yorm.attr(overall=yorm.types.Float)
+@yorm.attr(unit=Float)
+@yorm.attr(integration=Float)
+@yorm.attr(overall=Float)
 @yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml")
-class Project(object):
+class Project:
 
     def __init__(self, owner, repo, branch='master'):
         self.owner = owner
