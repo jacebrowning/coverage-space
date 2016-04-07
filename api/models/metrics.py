@@ -20,6 +20,9 @@ class Metrics(AttributeDictionary):
                 "Integration: {self.integration}%, "
                 "Overall: {self.overall}%").format(self=self)
 
+    def __bool__(self):
+        return bool(self.unit or self.integration or self.overall)
+
     @property
     def data(self):
         data = OrderedDict()

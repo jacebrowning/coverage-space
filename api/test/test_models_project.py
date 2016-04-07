@@ -14,9 +14,7 @@ def describe_project():
 
     @pytest.fixture
     def project2(project):
-        project.current.unit = 1.2
-        project.current.integration = 3.4
-        project.current.overall = 5.6
+        project.update(dict(unit=1.2, integration=3.4, overall=5.6))
         return project
 
     def describe_init():
@@ -27,7 +25,10 @@ def describe_project():
 
     def describe_str():
 
-        def it_inclues_metrics_summary(project2):
+        def it_indicates_when_metrics_have_been_reset(project):
+            expect(str(project)) == "Reset minimum metrics"
+
+        def it_describes_current_metrics(project2):
             expect(str(project2)) == \
                 "Unit: 1.2%, Integration: 3.4%, Overall: 5.6%"
 
@@ -59,8 +60,8 @@ def describe_project():
                     overall=42.0,
                 ),
                 minimum=dict(
-                    unit=0.0,
-                    integration=0.0,
+                    unit=1.2,
+                    integration=3.4,
                     overall=42.0,
                 ),
             )
@@ -83,8 +84,8 @@ def describe_project():
                 ),
                 minimum=dict(
                     unit=5.0,
-                    integration=0.0,
-                    overall=0.0,
+                    integration=3.4,
+                    overall=5.6,
                 ),
             )
 

@@ -1,4 +1,4 @@
-# pylint: disable=unused-variable,expression-not-assigned
+# pylint: disable=unused-variable,expression-not-assigned,singleton-comparison
 
 import pytest
 from expecter import expect
@@ -24,6 +24,15 @@ def describe_metrics():
         def it_summarizes_values(metrics):
             expect(str(metrics)) == \
                 "Unit: 1.2%, Integration: 3.4%, Overall: 5.6%"
+
+    def describe_bool():
+
+        def is_true_with_some_values(metrics):
+            expect(bool(metrics)) == True
+
+        def is_false_when_no_values(metrics):
+            metrics.reset()
+            expect(bool(metrics)) == False
 
     def describe_reset():
 
