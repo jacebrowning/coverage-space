@@ -40,4 +40,4 @@ def _handle_request(project, args):
 
     sync(project)
 
-    return track(project.metrics)
+    return track(project.current_metrics)
