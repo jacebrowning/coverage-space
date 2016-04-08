@@ -29,8 +29,10 @@ def sync(model):
         git.add(all=True)
         git.stash()
         if remote:
+            log.info("Pulling changes...")
             git.pull()
         try:
+            log.info("Saving changes...")
             git.stash('apply')
             git.add(all=True)
             git.commit(message=message)
@@ -39,6 +41,7 @@ def sync(model):
         else:
             log.info("Saved model: %s", message)
             if remote:
+                log.info("Pushing changes...")
                 git.push()
 
 
