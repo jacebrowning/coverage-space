@@ -1,9 +1,9 @@
 import os
 import pprint
+import contextlib
 import logging
-from multiprocessing import Process
 
-from sh import git as _git, ErrorReturnCode  # pylint: disable=no-name-in-module
+from sh import git, ErrorReturnCode  # pylint: disable=no-name-in-module
 import requests
 from flask import current_app, request
 
@@ -19,30 +19,36 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def sync(obj):
-    """Store updated metrics in version control."""
+def sync(model):
+    """Store all changes in version control."""
+    remote = current_app.config['ENV'] == 'prod'
 
-    def run(_sync=False):  # pragma: no cover (separate process)
-        git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
+    message = str(model)  # YORM models can't be used in a different directory
 
+    with location(DATA):
         git.add(all=True)
-        try:
-            git.commit(message=str(obj))
-        except ErrorReturnCode:
-            commit = False
-        else:
-            commit = True
-
-        if _sync:
-            if commit:
-                git.push(force=True)
+        git.stash()
+        if remote:
             git.pull()
+        try:
+            git.stash('apply')
+            git.add(all=True)
+            git.commit(message=message)
+        except ErrorReturnCode:
+            log.warning("No changes to save")
+        else:
+            log.info("Saved model: %s", message)
+            if remote:
+                git.push()
 
-    _sync = current_app.config['ENV'] == 'prod'
-    process = Process(target=run, args=[_sync])
-    process.start()
 
-    return obj
+@contextlib.contextmanager
+def location(dirpath):
+    """Change to a directory, temporarily."""
+    cwd = os.getcwd()
+    os.chdir(dirpath)
+    yield
+    os.chdir(cwd)
 
 
 def track(obj):
