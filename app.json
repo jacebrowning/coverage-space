@@ -1,0 +1,20 @@
+{
+  "name": "coverage-space",
+  "scripts": {
+    "postdeploy": "git clone https://github.com/jacebrowning/coverage-space-data /tmp/data"
+  },
+  "env": {
+    "CONFIG": {
+      "required": true
+    },
+    "DATA_REPO_URL": "/tmp/data"
+  },
+  "addons": [
+    "papertrail"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
