@@ -7,7 +7,9 @@
     "CONFIG": {
       "required": true
     },
-    "DATA_REPO_URL": "/tmp/data"
+    "DATA_REPO_URL": {
+      "required": true
+    }
   },
   "addons": [
     "papertrail"
