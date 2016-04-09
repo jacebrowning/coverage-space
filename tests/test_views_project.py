@@ -2,6 +2,7 @@
 
 import pytest
 from expecter import expect
+import yorm
 
 from api.models import Project
 
@@ -13,7 +14,7 @@ def describe_project():
     @pytest.fixture
     def project(tmpdir):
         tmpdir.chdir()
-        return Project('my_owner', 'my_repo')
+        return yorm.new(Project, 'my_owner', 'my_repo')
 
     @pytest.fixture
     def project2(project):
@@ -40,6 +41,14 @@ def describe_project():
                 'unit': 1.0,
                 'integration': 2.0,
                 'overall': 3.0,
+            }
+
+        def it_returns_an_error_for_unknown_projects(client):
+            status, data = load(client.get("/unknown/project"))
+
+            expect(status) == 404
+            expect(data) == {
+                'message': "No such project."
             }
 
     def describe_put():
@@ -136,7 +145,7 @@ def describe_project_branch():
     @pytest.fixture
     def project(tmpdir):
         tmpdir.chdir()
-        return Project('my_owner', 'my_repo', 'my_branch')
+        return yorm.new(Project, 'my_owner', 'my_repo', 'my_branch')
 
     @pytest.fixture
     def project2(project):

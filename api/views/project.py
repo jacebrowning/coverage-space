@@ -1,6 +1,8 @@
 import logging
 
 from flask import Blueprint, request
+from flask_api import exceptions
+import yorm
 
 from .. import __version__
 from ..models import Project
@@ -16,27 +18,35 @@ log = logging.getLogger(__name__)
 
 @blueprint.route(BASE, methods=['GET', 'PUT', 'DELETE'])
 @parser.use_args(ProjectSchema())
-def metrics(args, owner, repo):
+def metrics(data, owner, repo):
     """Get coverage metrics for the default branch."""
-    project = Project(owner, repo)
-    return _handle_request(project, args)
+    create = request.method == 'PUT'
+    project = yorm.find(Project, owner, repo, create=create)
+    if not project:
+        raise exceptions.NotFound("No such project.")
+
+    return _handle_request(project, data)
 
 
 @blueprint.route(BASE + "/<path:branch>", methods=['GET', 'PUT', 'DELETE'])
 @parser.use_args(ProjectSchema())
-def branch_metrics(args, owner, repo, branch):
+def branch_metrics(data, owner, repo, branch):
     """Get coverage metrics for a particular branch."""
-    project = Project(owner, repo, branch)
-    return _handle_request(project, args)
+    create = request.method == 'PUT'
+    project = yorm.find(Project, owner, repo, branch, create=create)
+    if not project:
+        raise exceptions.NotFound("No such project or branch.")
+
+    return _handle_request(project, data)
 
 
-def _handle_request(project, args):
+def _handle_request(project, data):
+
     if request.method == 'PUT':
-        project.update(args, exception=UnprocessableEntity)
+        project.update(data, exception=UnprocessableEntity)
+
     elif request.method == 'DELETE':
         project.reset()
-    else:
-        assert request.method == 'GET'
 
     sync(project)
 

@@ -104,7 +104,7 @@ watch: depends .clean-test
 .PHONY: run
 run: depends-dev .env
 	git init data
-	cd data && touch README && git commit -am "Add initial files"
+	cd data && date >> README && git add README && git commit -m "Add files"
 ifdef DEBUG
 	$(HONCHO) run $(PYTHON) manage.py run
 else
