@@ -26,23 +26,22 @@ def sync(model):
     message = str(model)  # YORM models can't be used in a different directory
 
     with location(DATA):
+
+        log.info("Saving changes...")
         git.add(all=True)
-        git.stash()
-        if remote:
-            log.info("Pulling changes...")
-            git.pull()
         try:
-            log.info("Saving changes...")
-            git.stash('apply')
-            git.add(all=True)
             git.commit(message=message)
         except ErrorReturnCode:
-            log.warning("No changes to save")
-        else:
-            log.info("Saved model: %s", message)
-            if remote:
-                log.info("Pushing changes...")
-                git.push()
+            log.info("No changes to save")
+
+        if remote:
+            log.info("Pulling changes...")
+            git.pull(rebase=True,
+                     strategy='recursive', strategy_option='theirs')
+
+        if remote:
+            log.info("Pushing changes...")
+            git.push()
 
 
 @contextlib.contextmanager

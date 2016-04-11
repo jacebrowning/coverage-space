@@ -4,7 +4,7 @@ from urllib.parse import urlencode, unquote
 from flask import request, current_app
 from flask_api import FlaskAPI
 
-from . import routes
+from . import views
 
 log = logging.getLogger('api')
 
@@ -52,5 +52,5 @@ def register_services(app):
 
 
 def register_blueprints(app):
-    app.register_blueprint(routes.root.blueprint)
-    app.register_blueprint(routes.project.blueprint)
+    app.register_blueprint(views.root.blueprint)
+    app.register_blueprint(views.project.blueprint)
