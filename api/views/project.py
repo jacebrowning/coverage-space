@@ -44,10 +44,15 @@ def _handle_request(project, data):
 
     if request.method == 'PUT':
         project.update(data, exception=UnprocessableEntity)
+        sync(project)
+        return track(project.current_metrics)
 
     elif request.method == 'DELETE':
         project.reset()
+        sync(project)
+        return track(dict(message="Reset minimum metrics."))
 
-    sync(project, push=request.method != 'GET')
-
-    return track(project.current_metrics)
+    else:
+        assert request.method == 'GET'
+        sync(project, push=False)
+        return track(project.current_metrics)

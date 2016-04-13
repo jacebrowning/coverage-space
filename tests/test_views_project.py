@@ -125,9 +125,7 @@ def describe_project():
 
             expect(status) == 200
             expect(data) == {
-                'unit': 1.0,
-                'integration': 2.0,
-                'overall': 3.0,
+                'message': "Reset minimum metrics."
             }
 
             status, data = load(client.put(endpoint, data={'overall': 2.5}))
@@ -206,9 +204,7 @@ def describe_project_branch():
 
             expect(status) == 200
             expect(data) == {
-                'unit': 4.0,
-                'integration': 5.0,
-                'overall': 6.0,
+                'message': "Reset minimum metrics."
             }
 
             status, data = load(client.put(endpoint, data={'unit': 1}))
