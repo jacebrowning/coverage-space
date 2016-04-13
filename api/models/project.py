@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 @yorm.attr(current=Metrics)
 @yorm.attr(minimum=Metrics)
-@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml")
+@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml", auto_create=False)
 class Project:
 
     def __init__(self, owner, repo, branch='master'):
