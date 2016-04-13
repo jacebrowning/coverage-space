@@ -14,7 +14,7 @@ def describe_project():
     @pytest.fixture
     def project(tmpdir):
         tmpdir.chdir()
-        return yorm.new(Project, 'my_owner', 'my_repo')
+        return yorm.create(Project, 'my_owner', 'my_repo')
 
     @pytest.fixture
     def project2(project):
@@ -145,7 +145,7 @@ def describe_project_branch():
     @pytest.fixture
     def project(tmpdir):
         tmpdir.chdir()
-        return yorm.new(Project, 'my_owner', 'my_repo', 'my_branch')
+        return yorm.create(Project, 'my_owner', 'my_repo', 'my_branch')
 
     @pytest.fixture
     def project2(project):
