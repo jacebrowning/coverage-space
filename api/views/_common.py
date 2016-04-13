@@ -19,7 +19,7 @@ CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 log = logging.getLogger(__name__)
 
 
-def sync(model):
+def sync(model, *, push=True):
     """Store all changes in version control."""
     remote = current_app.config['ENV'] == 'prod'
 
@@ -39,7 +39,7 @@ def sync(model):
             git.pull(rebase=True,
                      strategy='recursive', strategy_option='theirs')
 
-        if remote:
+        if remote and push:
             log.info("Pushing changes...")
             git.push()
 

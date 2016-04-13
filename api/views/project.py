@@ -38,6 +38,6 @@ def _handle_request(project, args):
     else:
         assert request.method == 'GET'
 
-    sync(project)
+    sync(project, push=request.method != 'GET')
 
     return track(project.current_metrics)
