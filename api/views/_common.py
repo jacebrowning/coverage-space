@@ -1,9 +1,8 @@
 import os
 import pprint
-import contextlib
 import logging
 
-from sh import git, ErrorReturnCode  # pylint: disable=no-name-in-module
+from sh import git as _git, ErrorReturnCode  # pylint: disable=no-name-in-module
 import requests
 from flask import current_app, request
 
@@ -21,36 +20,21 @@ log = logging.getLogger(__name__)
 
 def sync(model, *, push=True):
     """Store all changes in version control."""
-    remote = current_app.config['ENV'] == 'prod'
+    git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
-    message = str(model)  # YORM models can't be used in a different directory
+    log.info("Saving changes...")
+    git.add(all=True)
+    try:
+        git.commit(message=str(model))
+    except ErrorReturnCode:
+        log.info("No changes to save")
 
-    with location(DATA):
+    log.info("Pulling changes...")
+    git.pull(rebase=True, strategy='recursive', strategy_option='theirs')
 
-        log.info("Saving changes...")
-        git.add(all=True)
-        try:
-            git.commit(message=message)
-        except ErrorReturnCode:
-            log.info("No changes to save")
-
-        if remote:
-            log.info("Pulling changes...")
-            git.pull(rebase=True,
-                     strategy='recursive', strategy_option='theirs')
-
-        if remote and push:
-            log.info("Pushing changes...")
-            git.push()
-
-
-@contextlib.contextmanager
-def location(dirpath):
-    """Change to a directory, temporarily."""
-    cwd = os.getcwd()
-    os.chdir(dirpath)
-    yield
-    os.chdir(cwd)
+    if push:
+        log.info("Pushing changes...")
+        git.push('origin', 'master')
 
 
 def track(obj):

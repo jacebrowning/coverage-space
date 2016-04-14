@@ -102,9 +102,9 @@ watch: depends .clean-test
 # Server Targets ###############################################################
 
 .PHONY: run
-run: depends-dev .env
-	git init data
-	cd data && date >> README && git add README && git commit -m "Add files"
+run: depends-dev .env data
+	mkdir -p /tmp/data && cd /tmp/data && git init --bare
+	rm -rf data && git clone /tmp/data data && git push origin master
 ifdef DEBUG
 	$(HONCHO) run $(PYTHON) manage.py run
 else
@@ -123,6 +123,10 @@ launch: depends-dev
 .env:
 	echo "CONFIG=dev" >> $@
 	echo "#GOOGLE_ANALYTICS_TID=local" >> $@
+
+data:
+	mkdir -p /tmp/data && cd /tmp/data && git init --bare
+	rm -rf data && git clone /tmp/data data && git push origin master
 
 # Development Installation #####################################################
 
@@ -263,7 +267,7 @@ ifndef TRAVIS
 endif
 
 .PHONY: test-int
-test-int: depends-ci
+test-int: depends-ci data
 	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) tests; fi
 	$(PYTEST) $(PYTEST_OPTS) tests
 ifndef TRAVIS
@@ -272,7 +276,7 @@ endif
 
 .PHONY: tests test-all
 tests: test-all
-test-all: depends-ci
+test-all: depends-ci data
 	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) $(PACKAGE) tests; fi
 	$(PYTEST) $(PYTEST_OPTS) $(PACKAGE) tests
 ifndef TRAVIS
