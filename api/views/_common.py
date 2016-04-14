@@ -30,7 +30,7 @@ def sync(model, *, push=True):
         log.info("No changes to save")
 
     log.info("Pulling changes...")
-    git.pull(rebase=True, strategy='recursive', strategy_option='theirs')
+    git.pull(rebase=True)
 
     if push:
         log.info("Pushing changes...")
