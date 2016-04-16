@@ -127,7 +127,9 @@ data:
 	mkdir -p /tmp/data
 	cd /tmp/data && git init --bare
 	git clone /tmp/data data
-	cd data && git commit -m "1" --allow-empty && git push origin master && git pull
+	cd data && git config user.name "Test User"
+	cd data && git commit --allow-empty --message "Initial commit"
+	cd data && git push origin master && git pull
 
 # Development Installation #####################################################
 
