@@ -66,10 +66,6 @@ def describe_project():
                 ),
             )
 
-        def it_raises_excpetion_when_no_metrics(project):
-            with expect.raises(ValueError):
-                project.update(dict())
-
         def it_raises_exception_when_they_decrease(project2):
             project2.update(dict(unit=5))
 
