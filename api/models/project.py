@@ -42,10 +42,8 @@ class Project:
         return data
 
     def update(self, data, *, exception=ValueError):
-        if not data:
-            raise exception("No metrics provided.")
-
         message = OrderedDict()
+
         for name in ['unit', 'integration', 'overall']:
             current = data.get(name)
             if current is not None:

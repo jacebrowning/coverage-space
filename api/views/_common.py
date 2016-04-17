@@ -34,7 +34,7 @@ def sync(model, *, push=True):
 
     if push:
         log.info("Pushing changes...")
-        git.push('origin', 'master')
+        git.push()
 
 
 def track(obj):

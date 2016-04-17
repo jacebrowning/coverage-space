@@ -112,7 +112,7 @@ def describe_project():
         def it_returns_an_error_when_no_metrics_specified(client):
             status, data = load(client.put("/my_owner/my_repo"))
 
-            expect(status) == 422
+            expect(status) == 400
             expect(data) == {
                 'message': "No metrics provided."
             }

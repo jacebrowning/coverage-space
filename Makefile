@@ -95,7 +95,7 @@ ci: doc check test tests
 endif
 
 .PHONY: watch
-watch: depends .clean-test
+watch: depends .clean-test data
 	@ rm -rf $(FAILED_FLAG)
 	$(SNIFFER)
 
@@ -103,8 +103,6 @@ watch: depends .clean-test
 
 .PHONY: run
 run: depends-dev .env data
-	mkdir -p /tmp/data && cd /tmp/data && git init --bare
-	rm -rf data && git clone /tmp/data data && git push origin master
 ifdef DEBUG
 	$(HONCHO) run $(PYTHON) manage.py run
 else
@@ -125,8 +123,13 @@ launch: depends-dev
 	echo "#GOOGLE_ANALYTICS_TID=local" >> $@
 
 data:
-	mkdir -p /tmp/data && cd /tmp/data && git init --bare
-	rm -rf data && git clone /tmp/data data && git push origin master
+	rm -rf /tmp/data
+	mkdir -p /tmp/data
+	cd /tmp/data && git init --bare
+	git clone /tmp/data data
+	cd data && git config user.name "Test User"
+	cd data && git commit --allow-empty --message "Initial commit"
+	cd data && git push origin master && git pull
 
 # Development Installation #####################################################
 
