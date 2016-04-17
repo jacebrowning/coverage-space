@@ -3,7 +3,7 @@
 import sys
 
 __project__ = 'api'
-__version__ = '0.2'
+__version__ = '0.3'
 
 URL = 'coveage.space'
 

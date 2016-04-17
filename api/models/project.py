@@ -13,6 +13,8 @@ log = logging.getLogger(__name__)
 @yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml", auto_create=False)
 class Project:
 
+    THRESHOLD = 0.1
+
     def __init__(self, owner, repo, branch='master'):
         self.owner = owner
         self.repo = repo
@@ -49,7 +51,7 @@ class Project:
             if current is not None:
                 setattr(self.current, name, current)
                 minimum = getattr(self.minimum, name)
-                if current < minimum:
+                if minimum - current > self.THRESHOLD:
                     msg = "Value dropped below minimum: {}".format(minimum)
                     message[name] = [msg]
                 else:

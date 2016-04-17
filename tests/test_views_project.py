@@ -97,6 +97,17 @@ def describe_project():
                 }
             }
 
+        def it_allows_some_variation_in_metrics(client, project2):
+            params = {'overall': 2.91}
+            status, data = load(client.put("/my_owner/my_repo", data=params))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 1.0,
+                'integration': 2.0,
+                'overall': 2.91,
+            }
+
         def it_handles_multiple_bad_metrics(client, project2):
             params = {'unit': 0, 'integration': 0, 'overall': 99}
             status, data = load(client.put("/my_owner/my_repo", data=params))
