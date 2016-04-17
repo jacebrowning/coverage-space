@@ -17,6 +17,7 @@ def create_app(config):
 
     register_services(app)
     register_blueprints(app)
+    register_errors(app)
 
     return app
 
@@ -54,3 +55,12 @@ def register_services(app):
 def register_blueprints(app):
     app.register_blueprint(views.root.blueprint)
     app.register_blueprint(views.project.blueprint)
+
+
+def register_errors(app):
+    # pylint: disable=unused-variable
+
+    @app.errorhandler(500)
+    def handle_500(error):
+        log.exception(error)
+        return {'message': "An unknown error has occurred."}, 500
