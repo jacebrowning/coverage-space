@@ -16,12 +16,11 @@ CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
 CHANGES_URL = GITHUB_BASE + "CHANGES.md"
 
 log = logging.getLogger(__name__)
+git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
 
 def sync(model, *, push=True):
     """Store all changes in version control."""
-    git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
-
     log.info("Saving changes...")
     git.add(all=True)
     try:
@@ -35,6 +34,10 @@ def sync(model, *, push=True):
     if push:
         log.info("Pushing changes...")
         git.push()
+
+
+def reset():
+    git.reset(hard=True)
 
 
 def track(obj):
