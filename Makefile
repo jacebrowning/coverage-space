@@ -95,7 +95,8 @@ ci: doc check test tests
 endif
 
 .PHONY: watch
-watch: depends .clean-test data
+watch: depends .clean-test
+	rm -rf data && make data
 	@ rm -rf $(FAILED_FLAG)
 	$(SNIFFER)
 

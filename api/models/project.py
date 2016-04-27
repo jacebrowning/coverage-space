@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 @yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml", auto_create=False)
 class Project:
 
-    THRESHOLD = 0.1
+    THRESHOLD = 0.5
 
     def __init__(self, owner, repo, branch='master'):
         self.owner = owner
