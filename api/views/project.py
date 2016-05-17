@@ -7,7 +7,7 @@ import yorm
 from .. import __version__
 from ..models import Project
 
-from ._common import sync, track
+from ._utils import sync, track
 from ._schemas import parser, ProjectSchema, UnprocessableEntity
 
 BASE = "<owner>/<repo>"

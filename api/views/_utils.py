@@ -22,6 +22,7 @@ git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 def sync(model, *, push=True):
     """Store all changes in version control."""
     log.info("Saving changes...")
+    git.checkout('master')
     git.add(all=True)
     try:
         git.commit(message=str(model))
@@ -37,7 +38,7 @@ def sync(model, *, push=True):
 
 
 def reset():
-    git.reset(hard=True)
+    git.reset('master', hard=True)
 
 
 def track(obj):
