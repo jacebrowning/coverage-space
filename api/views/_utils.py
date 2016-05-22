@@ -39,6 +39,7 @@ def sync(model, *, push=True):
 
 def reset():
     git.reset('master', hard=True)
+    git.rebase(abort=True)
 
 
 def track(obj):
