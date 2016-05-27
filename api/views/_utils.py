@@ -34,6 +34,7 @@ def sync(model, *, push=True):
         git.pull(rebase=True)
     except ErrorReturnCode:
         log.error("Merge conflicts detected, attempting reset...")
+        git.fetch()
         git.reset('origin/master', hard=True)
         git.rebase(abort=True)
 
