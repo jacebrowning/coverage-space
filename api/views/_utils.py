@@ -30,16 +30,16 @@ def sync(model, *, push=True):
         log.info("No changes to save")
 
     log.info("Pulling changes...")
-    git.pull(rebase=True)
+    try:
+        git.pull(rebase=True)
+    except ErrorReturnCode:
+        log.error("Merge conflicts detected, attempting reset...")
+        git.reset('origin/master', hard=True)
+        git.rebase(abort=True)
 
     if push:
         log.info("Pushing changes...")
         git.push()
-
-
-def reset():
-    git.reset('master', hard=True)
-    git.rebase(abort=True)
 
 
 def track(obj):

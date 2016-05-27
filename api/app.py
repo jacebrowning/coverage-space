@@ -62,6 +62,5 @@ def register_errors(app):
 
     @app.errorhandler(500)
     def handle_500(error):
-        log.error("Attempting to recover from error: %s", error)
-        views._utils.reset()  # pylint: disable=protected-access
+        log.exception(error)
         return {'message': "An unknown error has occurred."}, 500
