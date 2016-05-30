@@ -183,6 +183,14 @@ def describe_project_branch():
                 'overall': 6.0,
             }
 
+        def it_returns_an_error_for_unknown_projects(client):
+            status, data = load(client.get("/unknown/project/branch"))
+
+            expect(status) == 404
+            expect(data) == {
+                'message': "No such project or branch."
+            }
+
     def describe_put():
 
         def it_updates_metrics(client, project2):
