@@ -3,7 +3,7 @@
 
 import yorm
 
-from api.test.conftest import pytest_configure  # pylint: disable=unused-import
+from api.tests.conftest import pytest_configure  # pylint: disable=unused-import
 
 from .fixtures import *
 
