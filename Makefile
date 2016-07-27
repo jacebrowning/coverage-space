@@ -1,7 +1,7 @@
 # Project settings
 PROJECT := api
 PACKAGE := api
-REPOSITORY := jacebrowning/coverage.space
+REPOSITORY := jacebrowning/coverage-space
 DIRECTORIES := $(PACKAGE) tests
 FILES := setup.py $(shell find $(DIRECTORIES) -name '*.py')
 
