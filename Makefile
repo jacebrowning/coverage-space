@@ -208,7 +208,7 @@ endif
 endif
 
 .PHONY: test-int
-test-int: depends ## Run the integration tests
+test-int: depends data ## Run the integration tests
 	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) tests; fi
 	$(PYTEST) $(PYTEST_OPTS) tests
 ifndef TRAVIS
@@ -218,7 +218,7 @@ endif
 endif
 
 .PHONY: test-all
-test-all: depends ## Run all the tests
+test-all: depends data ## Run all the tests
 	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) $(DIRECTORIES); fi
 	$(PYTEST) $(PYTEST_OPTS) $(DIRECTORIES)
 ifndef TRAVIS
