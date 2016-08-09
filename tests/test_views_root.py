@@ -12,4 +12,4 @@ def describe_root():
         status, data = load(client.get("/"))
 
         expect(status) == 200
-        expect(sorted(data.keys())) == ['changes', 'date', 'version']
+        expect(sorted(data.keys())) == ['changelog', 'date', 'version']

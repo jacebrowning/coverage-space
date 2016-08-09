@@ -5,7 +5,7 @@ from flask import Blueprint
 
 from .. import __version__
 
-from ._utils import CHANGES_URL, track
+from ._utils import CHANGELOG_URL, track
 
 
 blueprint = Blueprint('root', __name__, url_prefix="/")
@@ -18,6 +18,6 @@ def index():
 
     metadata['version'] = __version__
     metadata['date'] = os.getenv('DEPLOY_DATE')
-    metadata['changes'] = CHANGES_URL
+    metadata['changelog'] = CHANGELOG_URL
 
     return track(metadata)

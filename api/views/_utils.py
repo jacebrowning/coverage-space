@@ -13,7 +13,7 @@ DATA = os.path.join(ROOT, "data")
 
 GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/"
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
-CHANGES_URL = GITHUB_BASE + "CHANGES.md"
+CHANGELOG_URL = GITHUB_BASE + "CHANGELOG.md"
 
 log = logging.getLogger(__name__)
 git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
