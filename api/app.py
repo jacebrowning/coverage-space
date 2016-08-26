@@ -55,6 +55,7 @@ def register_services(app):
 def register_blueprints(app):
     app.register_blueprint(views.root.blueprint)
     app.register_blueprint(views.project.blueprint)
+    app.blueprints['flask-api'] = views.theme.blueprint
 
 
 def register_errors(app):
