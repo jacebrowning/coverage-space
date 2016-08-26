@@ -1,8 +1,6 @@
 #!env/bin/python
 
 import os
-import logging
-from subprocess import check_output
 
 from flask_script import Manager, Server
 
@@ -10,23 +8,23 @@ from api.settings import get_config
 from api.app import create_app
 
 
-# Select app configuration from the environment
-config = get_config(os.getenv('CONFIG'))
-
-# Build the app using configuration from the environment
-app = create_app(config)
-
-# Populate unset environment variables
-for name, command in [
-    ('DEPLOY_DATE', "TZ=America/Detroit date '+%F %T'"),
-]:
-    output = check_output(command, shell=True, universal_newlines=True).strip()
-    os.environ[name] = os.getenv(name, output)
-
-# Configure the command-line interface
-manager = Manager(app)
-manager.add_command('run', Server(host='0.0.0.0'))
+def find_assets():
+    """Yield paths for all static files and templates."""
+    for name in ['static', 'templates']:
+        directory = os.path.join(app.config['PATH'], name)
+        for entry in os.scandir(directory):
+            if entry.is_file():
+                yield entry.path
 
 
 if __name__ == '__main__':
+    config = get_config(os.environ['FLASK_ENV'])
+
+    app = create_app(config)
+
+    server = Server(host='0.0.0.0', extra_files=find_assets())
+
+    manager = Manager(app)
+    manager.add_command('run', server)
+
     manager.run()

@@ -1,4 +1,3 @@
-import os
 from collections import OrderedDict
 
 from flask import Blueprint
@@ -17,7 +16,6 @@ def index():
     metadata = OrderedDict()
 
     metadata['version'] = __version__
-    metadata['date'] = os.getenv('DEPLOY_DATE')
     metadata['changelog'] = CHANGELOG_URL
 
     return track(metadata)

@@ -81,29 +81,15 @@ doctor:  ## Confirm system dependencies are available
 # SERVER TARGETS ###############################################################
 
 IP ?= $(shell ipconfig getifaddr en0 || ipconfig getifaddr en1)
-CONFIG ?= dev
-PORT ?= 5000
 
 .PHONY: run
-run: depends .env data
-ifdef DEBUG
-	$(HONCHO) run $(PYTHON) manage.py run
-else
-	status=3; while [ $$status -eq 3 ]; do $(HONCHO) start; status=$$?; done
-endif
-
-.PHONY: run-debug
-run-debug:
-	make run DEBUG=true
+run: depends data
+	status=1; while [ $$status -eq 1 ]; do FLASK_ENV=dev $(PYTHON) manage.py run; status=$$?; sleep 1; done
 
 .PHONY: launch
 launch: depends
-	eval "sleep 3; open http://$(IP):$(PORT)" &
+	eval "sleep 3; open http://$(IP):5000" &
 	$(MAKE) run
-
-.env:
-	echo "CONFIG=dev" >> $@
-	echo "#GOOGLE_ANALYTICS_TID=local" >> $@
 
 data:
 	rm -rf /tmp/data
