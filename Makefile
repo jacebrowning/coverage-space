@@ -71,13 +71,6 @@ watch: depends .clean-test ## Continuously run all CI tasks when files chanage
 	rm -rf data && make data
 	$(SNIFFER)
 
-# SYSTEM DEPENDENCIES ##########################################################
-
-.PHONY: doctor
-doctor:  ## Confirm system dependencies are available
-	@ echo "Checking Python version:"
-	@ python --version | tee /dev/stderr | grep -q "3.5."
-
 # SERVER TARGETS ###############################################################
 
 IP ?= $(shell ipconfig getifaddr en0 || ipconfig getifaddr en1)
@@ -99,6 +92,13 @@ data:
 	cd data && git config user.name "Test User"
 	cd data && git commit --allow-empty --message "Initial commit"
 	cd data && git push origin master && git pull
+
+# SYSTEM DEPENDENCIES ##########################################################
+
+.PHONY: doctor
+doctor:  ## Confirm system dependencies are available
+	@ echo "Checking Python version:"
+	@ python --version | tee /dev/stderr | grep -q "3.5."
 
 # PROJECT DEPENDENCIES #########################################################
 
