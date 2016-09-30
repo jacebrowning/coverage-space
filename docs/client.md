@@ -21,4 +21,4 @@ where:
 
 ## Additional Reading
 
-For additional options and supported coverage formats, see the [full documentation](http://the-coverage-space.readthedocs.io).
+For additional options and supported coverage formats, see the [full documentation](https://cli.coverage.space).
