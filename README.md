@@ -6,13 +6,17 @@
 [![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
 [![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/jacebrowning/coverage-space.svg)](https://scrutinizer-ci.com/g/jacebrowning/coverage-space/?branch=master)
 
-## Basic Usage
+## Quick Start
+
+### Prerequisites
 
 The API can be used with `curl`, but [HTTPie](https://github.com/jkbrzt/httpie) is preferred:
 
 ```sh
 $ pip install HTTPie
 ```
+
+### Commands
 
 Get the latest coverage metrics:
 
@@ -34,4 +38,4 @@ $ http DELETE api.coverage.space/my_owner/my_repo
 
 ## Documentation
 
-Read the full docs [here](http://coverage.space/).
+Read the full docs at [coverage.space](https://coverage.space).
