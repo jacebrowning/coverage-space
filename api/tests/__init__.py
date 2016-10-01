@@ -1,1 +1,1 @@
-"""Unit tests for the `api` package."""
+"""Unit tests for the package."""
