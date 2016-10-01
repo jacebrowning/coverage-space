@@ -4,7 +4,7 @@
     "postdeploy": "git clone https://github.com/jacebrowning/coverage-space-data /tmp/data"
   },
   "env": {
-    "CONFIG": {
+    "FLASK_ENV": {
       "required": true
     },
     "DATA_REPO_URL": {
