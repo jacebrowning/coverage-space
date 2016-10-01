@@ -8,6 +8,7 @@ theme: mkdocs
 
 pages:
 - Home: index.md
+- API: api.md
 - Client: client.md
 - About:
   - Release Notes: about/changelog.md
