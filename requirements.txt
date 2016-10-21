@@ -13,4 +13,4 @@ YORM == 0.8.dev5
 
 # Deployment
 Flask-Script == 2.0.5
-gunicorn == 19.3.0
+gunicorn==19.6.0
