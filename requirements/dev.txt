@@ -14,7 +14,7 @@ sniffer==0.3.6
 honcho==0.7.1
 
 # Build
-wheel
+wheel==0.29.0
 pyinstaller==3.2
 
 # Release
