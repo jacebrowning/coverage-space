@@ -5,7 +5,7 @@ webargs == 1.0.0
 
 # Client
 requests==2.11.1
-HTTPie == 0.9.3
+HTTPie==0.9.6
 
 # Storage
 sh == 1.11
