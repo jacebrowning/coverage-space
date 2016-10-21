@@ -5,7 +5,7 @@ pylint==1.6.4
 
 # Testing
 pytest
-pytest-describe
+pytest-describe==0.11.0
 pytest-expecter==0.2.2.post3
 pytest-cov
 pytest-random==0.02
