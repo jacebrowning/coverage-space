@@ -15,7 +15,7 @@ honcho==0.7.1
 
 # Build
 wheel
-pyinstaller
+pyinstaller==3.2
 
 # Release
 twine==1.8.1
