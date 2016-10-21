@@ -4,7 +4,7 @@ Flask-API == 0.6.6
 webargs == 1.0.0
 
 # Client
-requests == 2.7.0
+requests==2.11.1
 HTTPie == 0.9.3
 
 # Storage
