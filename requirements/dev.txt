@@ -2,7 +2,7 @@
 pylint==1.6.4
 docutils
 readme==0.7.1
-pdoc
+pdoc==0.3.2
 mkdocs==0.15.3
 pygments
 
