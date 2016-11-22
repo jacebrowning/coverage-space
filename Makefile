@@ -89,6 +89,7 @@ data:
 	cd /tmp/data && git init --bare
 	git clone /tmp/data data
 	cd data && git config user.name "Test User"
+	cd data && git config user.email "test@example.com"
 	cd data && git commit --allow-empty --message "Initial commit"
 	cd data && git push origin master && git pull
 
