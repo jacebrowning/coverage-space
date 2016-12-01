@@ -8,7 +8,7 @@ requests==2.12.2
 HTTPie==0.9.6
 
 # Storage
-sh==1.12.3
+sh==1.12.5
 YORM==1.1
 
 # Deployment
