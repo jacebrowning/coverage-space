@@ -1,7 +1,7 @@
 {
   "name": "coverage-space",
   "scripts": {
-    "postdeploy": "git clone https://github.com/jacebrowning/coverage-space-data /tmp/data"
+    "postdeploy": "make data"
   },
   "env": {
     "FLASK_ENV": {
