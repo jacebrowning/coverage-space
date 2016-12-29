@@ -1,6 +1,7 @@
 import os
 import pprint
 import logging
+from contextlib import suppress
 
 from sh import git as _git, ErrorReturnCode  # pylint: disable=no-name-in-module
 import requests
@@ -35,8 +36,9 @@ def sync(model, *, push=True):
     except ErrorReturnCode:
         log.error("Merge conflicts detected, attempting reset...")
         git.fetch()
+        with suppress(ErrorReturnCode):
+            git.rebase(abort=True)
         git.reset('origin/master', hard=True)
-        git.rebase(abort=True)
 
     if push:
         log.info("Pushing changes...")
