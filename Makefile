@@ -9,7 +9,7 @@ MODULES := $(shell find $(PACKAGES) -name '*.py') $(CONFIG)
 # Python settings
 ifndef TRAVIS
 	PYTHON_MAJOR ?= 3
-	PYTHON_MINOR ?= 5
+	PYTHON_MINOR ?= 6
 endif
 
 # System paths
@@ -98,7 +98,7 @@ data:
 .PHONY: doctor
 doctor:  ## Confirm system dependencies are available
 	@ echo "Checking Python version:"
-	@ python --version | tee /dev/stderr | grep -q "3.5."
+	@ python --version | tee /dev/stderr | grep -q "3.6."
 
 # PROJECT DEPENDENCIES #########################################################
 
