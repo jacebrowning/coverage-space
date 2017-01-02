@@ -10,11 +10,15 @@ puts-step() {
   echo "-----> $@"
 }
 
+puts-step "Cloning data repository..."
+
+rm -rf data
+git clone ${DATA_REPO_URL} data | indent
+
+
 puts-step "Configuring data repository..."
 
-git config --global user.name "The Coverage Space" | indent
-git config --global user.email "info@coverage.space" | indent
-git config --global push.default simple | indent
-
-# git clone https://<token>@github.com/jacebrowning/coverage-space-data.git
-rm -rf data; git clone ${DATA_REPO_URL} data | indent
+cd data
+git config user.name "The Coverage Space" | indent
+git config user.email "info@coverage.space" | indent
+git config push.default simple | indent

@@ -45,8 +45,10 @@ def _handle_request(project, data):
     if request.method == 'PUT':
         if not data:
             raise exceptions.ParseError("No metrics provided.")
-        project.update(data, exception=UnprocessableEntity)
-        sync(project)
+        try:
+            project.update(data, exception=UnprocessableEntity)
+        finally:
+            sync(project)
         return track(project.current_metrics)
 
     elif request.method == 'DELETE':
@@ -56,5 +58,5 @@ def _handle_request(project, data):
 
     else:
         assert request.method == 'GET'
-        sync(project, push=False)
+        sync(project, changes=False)
         return track(project.current_metrics)
