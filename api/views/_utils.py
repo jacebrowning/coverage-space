@@ -20,15 +20,18 @@ log = logging.getLogger(__name__)
 git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
 
-def sync(model, *, push=True):
+def sync(model, *, changes=True):
     """Store all changes in version control."""
-    log.info("Saving changes...")
-    git.checkout('master')
-    git.add(all=True)
-    try:
-        git.commit(message=str(model))
-    except ErrorReturnCode:
-        log.info("No changes to save")
+    if changes:
+        log.info("Saving changes...")
+        git.checkout('master')
+        git.add(all=True)
+        try:
+            git.diff(cached=True, exit_code=True)
+        except ErrorReturnCode:
+            git.commit(message=str(model))
+        else:
+            log.info("No changes to save")
 
     log.info("Pulling changes...")
     try:
@@ -40,7 +43,7 @@ def sync(model, *, push=True):
             git.rebase(abort=True)
         git.reset('origin/master', hard=True)
 
-    if push:
+    if changes:
         log.info("Pushing changes...")
         git.push(force=True)
 
