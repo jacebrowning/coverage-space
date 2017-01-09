@@ -1,7 +1,7 @@
 # Server
 Flask==0.12
 Flask-API==0.6.9
-webargs==1.5.1
+webargs==1.5.2
 
 # Client
 requests==2.12.4
