@@ -1,5 +1,4 @@
 # Documentation
-pylint==1.6.5
 docutils==0.13.1
 readme==0.7.1
 pdoc==0.3.2
@@ -12,10 +11,3 @@ sniffer==0.3.6
 
 # Runner
 honcho==0.7.1
-
-# Build
-wheel==0.29.0
-pyinstaller==3.2.1
-
-# Release
-twine==1.8.1
