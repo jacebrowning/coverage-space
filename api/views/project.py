@@ -54,7 +54,7 @@ def _handle_request(project, data):
     elif request.method == 'DELETE':
         project.reset()
         sync(project)
-        return track(dict(message="Reset minimum metrics."))
+        return track(dict(message="Reset minimum metrics.")), 202
 
     else:
         assert request.method == 'GET'

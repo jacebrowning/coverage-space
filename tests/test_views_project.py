@@ -134,7 +134,7 @@ def describe_project():
             endpoint = "/my_owner/my_repo"
             status, data = load(client.delete(endpoint))
 
-            expect(status) == 200
+            expect(status) == 202
             expect(data) == {
                 'message': "Reset minimum metrics."
             }
@@ -221,7 +221,7 @@ def describe_project_branch():
             endpoint = "/my_owner/my_repo/my_branch"
             status, data = load(client.delete(endpoint))
 
-            expect(status) == 200
+            expect(status) == 202
             expect(data) == {
                 'message': "Reset minimum metrics."
             }

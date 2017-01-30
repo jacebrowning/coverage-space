@@ -1,5 +1,9 @@
 # Revision History
 
+## 1.1 (2017/01/30)
+
+- Return 202 when resetting metrics.
+
 ## 1.0 (2016/09/30)
 
 - Initial stable release.
