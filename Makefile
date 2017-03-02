@@ -9,7 +9,7 @@ MODULES := $(shell find $(PACKAGES) -name '*.py') $(CONFIG)
 # Python settings
 ifndef TRAVIS
 	PYTHON_MAJOR ?= 3
-	PYTHON_MINOR ?= 5
+	PYTHON_MINOR ?= 6
 endif
 
 # System paths
@@ -98,7 +98,7 @@ data:
 .PHONY: doctor
 doctor:  ## Confirm system dependencies are available
 	@ echo "Checking Python version:"
-	@ python --version | tee /dev/stderr | grep -q "3.5."
+	@ python --version | tee /dev/stderr | grep -q "3.6."
 
 # PROJECT DEPENDENCIES #########################################################
 
@@ -111,6 +111,8 @@ install: $(DEPS_CI) $(DEPS_DEV) $(DEPS_BASE) ## Install all project dependencies
 
 $(DEPS_CI): requirements/ci.txt $(PIP)
 	$(PIP) install --upgrade -r $<
+	$(PIP) install git+git://github.com/PyCQA/pylint.git@e0fdd25c214e60bef10fbaa46252f4aaa74de8c2
+	$(PIP) install git+git://github.com/PyCQA/astroid.git@4e7d9fee4080d2e0db67a3e0463be8b196e56a95
 	@ touch $@  # flag to indicate dependencies are installed
 
 $(DEPS_DEV): requirements/dev.txt $(PIP)
@@ -122,6 +124,8 @@ else ifdef MAC
 else ifdef LINUX
 	$(PIP) install --upgrade pyinotify
 endif
+	$(PIP) install git+git://github.com/PyCQA/pylint.git@e0fdd25c214e60bef10fbaa46252f4aaa74de8c2
+	$(PIP) install git+git://github.com/PyCQA/astroid.git@4e7d9fee4080d2e0db67a3e0463be8b196e56a95
 	@ touch $@  # flag to indicate dependencies are installed
 
 $(DEPS_BASE): setup.py requirements.txt $(PYTHON)
