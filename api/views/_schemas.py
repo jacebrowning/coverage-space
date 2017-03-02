@@ -32,9 +32,9 @@ class ProjectSchema(Schema):
     def log_parsed(self, data):  # pylint: disable=no-self-use
         log.debug("Parsed data: %r", data)
 
-    def handle_error(self, exc, data):
+    def handle_error(self, error, data):
         log.error("Unable to parse: %r", data)
-        raise UnprocessableEntity(exc.messages)
+        raise UnprocessableEntity(error.messages)
 
     class Meta:
         strict = True

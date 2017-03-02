@@ -25,8 +25,8 @@ class Project:
     def __str__(self):
         if self.minimum:
             return str(self.current)
-        else:
-            return "Reset minimum metrics"
+
+        return "Reset minimum metrics"
 
     @property
     def current_metrics(self):
