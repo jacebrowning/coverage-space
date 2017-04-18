@@ -5,7 +5,7 @@ pep257==0.7.0
 # Testing
 pytest==3.0.7
 pytest-describe==0.11.0
-pytest-expecter==0.2.2.post3
+pytest-expecter==0.2.2.post4
 pytest-cov==2.4.0
 pytest-random==0.02
 
