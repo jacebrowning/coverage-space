@@ -1,5 +1,5 @@
 # Documentation
-docutils==0.13.1
+docutils==0.14
 readme==0.7.1
 pdoc==0.3.2
 mkdocs==0.17.0
