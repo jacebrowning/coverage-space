@@ -9,7 +9,7 @@ HTTPie==0.9.9
 
 # Storage
 sh==1.12.14
-YORM==1.4
+YORM==1.5
 
 # Deployment
 Flask-Script==2.0.6
