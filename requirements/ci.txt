@@ -1,5 +1,5 @@
 # Linters
-pep8==1.7.0
+pep8==1.7.1
 pep257==0.7.0
 
 # Testing
