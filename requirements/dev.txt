@@ -2,7 +2,7 @@
 docutils==0.14
 readme==0.7.1
 pdoc==0.3.2
-mkdocs==0.17.2
+mkdocs==0.17.3
 pygments==2.2.0
 
 # Tooling
