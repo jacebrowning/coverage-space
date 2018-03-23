@@ -3,7 +3,7 @@ pep8==1.7.1
 pep257==0.7.0
 
 # Testing
-pytest==3.4.2
+pytest==3.5.0
 pytest-describe==0.11.1
 pytest-expecter==1.2
 pytest-cov==2.5.1
