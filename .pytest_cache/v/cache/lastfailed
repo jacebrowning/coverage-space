@@ -1,3 +1,0 @@
-{
-  "api/tests/test_settings.py::describe_get_config::it_returns_a_config": true
-}
