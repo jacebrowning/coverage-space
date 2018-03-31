@@ -1,5 +1,3 @@
-import logging
-
 from flask import Blueprint, request
 from flask_api import exceptions
 import yorm
@@ -13,7 +11,6 @@ from ._schemas import parser, ProjectSchema, UnprocessableEntity
 BASE = "<owner>/<repo>"
 
 blueprint = Blueprint('project', __name__, url_prefix="/")
-log = logging.getLogger(__name__)
 
 
 @blueprint.route(BASE, methods=['GET', 'PUT', 'DELETE'])

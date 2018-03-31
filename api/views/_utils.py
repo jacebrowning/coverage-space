@@ -1,11 +1,11 @@
 import os
 import pprint
-import logging
 from contextlib import suppress
 
 from sh import git as _git, ErrorReturnCode  # pylint: disable=no-name-in-module
 import requests
 from flask import current_app, request
+import log
 
 from .. import URL
 
@@ -16,7 +16,6 @@ GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/mas
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
 CHANGELOG_URL = GITHUB_BASE + "CHANGELOG.md"
 
-log = logging.getLogger(__name__)
 git = _git.bake(git_dir=os.path.join(DATA, ".git"), work_tree=DATA)
 
 

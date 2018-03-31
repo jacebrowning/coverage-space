@@ -1,13 +1,11 @@
-import logging
-
 from webargs import core
 from webargs.flaskparser import FlaskParser
 from marshmallow import Schema, fields, pre_load, post_load
 from flask_api.exceptions import ParseError
+import log
 
 
 parser = FlaskParser(('form', 'data'))
-log = logging.getLogger(__name__)
 
 
 @parser.location_handler('data')

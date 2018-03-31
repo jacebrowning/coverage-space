@@ -1,87 +1,60 @@
-# Project settings
-PROJECT := api
-PACKAGE := api
-REPOSITORY := jacebrowning/coverage-space
-PACKAGES := $(PACKAGE) tests
-CONFIG := $(shell ls *.py)
-MODULES := $(shell find $(PACKAGES) -name '*.py') $(CONFIG)
-
-# Python settings
-ifndef TRAVIS
-	PYTHON_MAJOR ?= 3
-	PYTHON_MINOR ?= 6
-endif
-
-# System paths
-PLATFORM := $(shell python -c 'import sys; print(sys.platform)')
-ifneq ($(findstring win32, $(PLATFORM)), )
-	WINDOWS := true
-	SYS_PYTHON_DIR := C:\\Python$(PYTHON_MAJOR)$(PYTHON_MINOR)
-	SYS_PYTHON := $(SYS_PYTHON_DIR)\\python.exe
-	# https://bugs.launchpad.net/virtualenv/+bug/449537
-	export TCL_LIBRARY=$(SYS_PYTHON_DIR)\\tcl\\tcl8.5
+ifdef CIRCLECI
+	RUN := pipenv run
+else ifdef HEROKU_APP_NAME
+	SKIP_INSTALL := true
 else
-	ifneq ($(findstring darwin, $(PLATFORM)), )
-		MAC := true
-	else
-		LINUX := true
-	endif
-	SYS_PYTHON := python$(PYTHON_MAJOR)
-	ifdef PYTHON_MINOR
-		SYS_PYTHON := $(SYS_PYTHON).$(PYTHON_MINOR)
-	endif
+	RUN := pipenv run
 endif
-
-# Virtual environment paths
-ENV := env
-ifneq ($(findstring win32, $(PLATFORM)), )
-	BIN := $(ENV)/Scripts
-	ACTIVATE := $(BIN)/activate.bat
-	OPEN := cmd /c start
-else
-	BIN := $(ENV)/bin
-	ACTIVATE := . $(BIN)/activate
-	ifneq ($(findstring cygwin, $(PLATFORM)), )
-		OPEN := cygstart
-	else
-		OPEN := open
-	endif
-endif
-
-# Virtual environment executables
-ifndef TRAVIS
-	BIN_ := $(BIN)/
-endif
-PYTHON := $(BIN_)python
-PIP := $(BIN_)pip
-EASY_INSTALL := $(BIN_)easy_install
-SNIFFER := $(BIN_)sniffer
-HONCHO := $(ACTIVATE) && $(BIN_)honcho
-
-# MAIN TASKS ###################################################################
 
 .PHONY: all
-all: doc
+all: install
 
 .PHONY: ci
-ci: check test ## Run all tasks that determine CI status
+ci: check test ## CI | Run all validation targets
 
 .PHONY: watch
-watch: install .clean-test ## Continuously run all CI tasks when files chanage
-	$(SNIFFER)
+watch: install ## CI | Rerun all validation targests in a loop
+	@ rm -rf $(FAILURES)
+	$(RUN) sniffer
 
-# SERVER TARGETS ###############################################################
+# SYSTEM DEPENDENCIES #########################################################
 
-IP ?= $(shell ipconfig getifaddr en0 || ipconfig getifaddr en1)
+.PHONY: doctor
+doctor: ## Check for required system dependencies
+	bin/verchew
 
-.PHONY: run
-run: install data
-	status=1; while [ $$status -eq 1 ]; do FLASK_ENV=dev $(PYTHON) manage.py run; status=$$?; sleep 1; done
+# PROJECT DEPENDENCIES ########################################################
 
-.PHONY: launch
-launch: install
-	eval "sleep 3; open http://$(IP):5000" &
-	$(MAKE) run
+export PIPENV_VENV_IN_PROJECT=true
+VENV := .venv
+
+BACKEND_DEPENDENCIES := $(VENV)/.pipenv-$(shell bin/checksum Pipfile*)
+FRONTEND_DEPENDENCIES :=
+
+.PHONY: install
+ifndef SKIP_INSTALL
+install: $(BACKEND_DEPENDENCIES) $(FRONTEND_DEPENDENCIES) ## Install project dependencies
+endif
+
+$(BACKEND_DEPENDENCIES):
+	pipenv install --dev
+	@ touch $@
+
+$(FRONTEND_DEPENDENCIES):
+	# TODO: Install frontend dependencies if applicable
+	@ touch $@
+
+.PHONY: clean
+clean:
+	rm -rf staticfiles
+	rm -rf .coverage htmlcov
+
+.PHONY: clean-all
+clean-all: clean
+	# TODO: Delete all frontend files
+	rm -rf $(VENV)
+
+# RUNTIME DEPENDENCIES ########################################################
 
 data:
 	rm -rf /tmp/data
@@ -93,256 +66,92 @@ data:
 	cd data && git commit --allow-empty --message "Initial commit"
 	cd data && git push origin master && git pull
 
-# SYSTEM DEPENDENCIES ##########################################################
+# VALIDATION TARGETS ##########################################################
 
-.PHONY: doctor
-doctor:  ## Confirm system dependencies are available
-	@ echo "Checking Python version:"
-	@ python --version | tee /dev/stderr | grep -q "3.6."
-
-# PROJECT DEPENDENCIES #########################################################
-
-DEPS_CI := $(ENV)/.install-ci
-DEPS_DEV := $(ENV)/.install-dev
-DEPS_BASE := $(ENV)/.install-base
-
-.PHONY: install
-install: $(DEPS_CI) $(DEPS_DEV) $(DEPS_BASE) ## Install all project dependencies
-
-$(DEPS_CI): requirements/ci.txt $(PIP)
-	$(PIP) install --upgrade -r $<
-	$(PIP) install git+git://github.com/PyCQA/pylint.git@e0fdd25c214e60bef10fbaa46252f4aaa74de8c2
-	$(PIP) install git+git://github.com/PyCQA/astroid.git@4e7d9fee4080d2e0db67a3e0463be8b196e56a95
-	@ touch $@  # flag to indicate dependencies are installed
-
-$(DEPS_DEV): requirements/dev.txt $(PIP)
-	$(PIP) install --upgrade -r $<
-ifdef WINDOWS
-	@ echo "Manually install pywin32: https://sourceforge.net/projects/pywin32/files/pywin32"
-else ifdef MAC
-	$(PIP) install --upgrade "pync<2.0" MacFSEvents
-else ifdef LINUX
-	$(PIP) install --upgrade pyinotify
-endif
-	$(PIP) install git+git://github.com/PyCQA/pylint.git@e0fdd25c214e60bef10fbaa46252f4aaa74de8c2
-	$(PIP) install git+git://github.com/PyCQA/astroid.git@4e7d9fee4080d2e0db67a3e0463be8b196e56a95
-	@ touch $@  # flag to indicate dependencies are installed
-
-$(DEPS_BASE): setup.py requirements.txt $(PYTHON)
-	$(PYTHON) setup.py develop
-	@ touch $@  # flag to indicate dependencies are installed
-
-$(PIP): $(PYTHON)
-	$(PYTHON) -m pip install --upgrade pip setuptools
-	@ touch $@
-
-$(PYTHON):
-	$(SYS_PYTHON) -m venv $(ENV)
-
-# CHECKS #######################################################################
-
-PEP8 := $(BIN_)pep8
-PEP8RADIUS := $(BIN_)pep8radius
-PEP257 := $(BIN_)pep257
-PYLINT := $(BIN_)pylint
+PYTHON_PACKAGES := api
+FAILURES := .cache/v/cache/lastfailed
 
 .PHONY: check
-check: pep8 pep257 pylint ## Run linters and static analysis
+check: check-backend ## Run static analysis
 
-.PHONY: pep8
-pep8: install ## Check for convention issues
-	$(PEP8) $(PACKAGES) $(CONFIG) --config=.pep8rc
+.PHONY: check-backend
+check-backend: install
+	$(RUN) pylint $(PYTHON_PACKAGES) tests --rcfile=.pylint.ini
+	$(RUN) pycodestyle $(PYTHON_PACKAGES) tests --config=.pycodestyle.ini
 
-.PHONY: pep257
-pep257: install ## Check for docstring issues
-	$(PEP257) $(PACKAGES) $(CONFIG)
-
-.PHONY: pylint
-pylint: install ## Check for code issues
-	$(PYLINT) $(PACKAGES) $(CONFIG) --rcfile=.pylintrc
-
-.PHONY: fix
-fix: install
-	$(PEP8RADIUS) --docformatter --in-place
-
-# TESTS ########################################################################
-
-PYTEST := $(BIN_)py.test
-COVERAGE := $(BIN_)coverage
-COVERAGE_SPACE := $(BIN_)coverage.space
-
-RANDOM_SEED ?= $(shell date +%s)
-
-PYTEST_CORE_OPTS := -r xXw -vv
-PYTEST_COV_OPTS := --cov=$(PACKAGE) --no-cov-on-fail --cov-report=term-missing --cov-report=html
-PYTEST_RANDOM_OPTS := --random --random-seed=$(RANDOM_SEED)
-
-PYTEST_OPTS := $(PYTEST_CORE_OPTS) $(PYTEST_COV_OPTS) $(PYTEST_RANDOM_OPTS)
-PYTEST_OPTS_FAILFAST := $(PYTEST_OPTS) --last-failed --exitfirst
-
-FAILURES := .cache/v/cache/lastfailed
-REPORTS ?= xmlreport
+.PHONY: check-frontend
+check-frontend: install
+	# TODO: Run frontend linters if applicable
 
 .PHONY: test
-test: test-all
+test: test-backend test-frontend ## Run all tests
 
-.PHONY: test-unit
-test-unit: install ## Run the unit tests
-	@- mv $(FAILURES) $(FAILURES).bak
-	$(PYTEST) $(PYTEST_OPTS) $(PACKAGE) --junitxml=$(REPORTS)/unit.xml
-	@- mv $(FAILURES).bak $(FAILURES)
-	$(COVERAGE_SPACE) $(REPOSITORY) unit
+.PHONY: test-backend
+test-backend: test-backend-all
 
-.PHONY: test-int
-test-int: install data ## Run the integration tests
-	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) tests; fi
+.PHONY: test-backend-unit
+test-backend-unit: install data
+	@ ( mv $(FAILURES) $(FAILURES).bak || true ) > /dev/null 2>&1
+	$(RUN) py.test $(PYTHON_PACKAGES) tests/unit
+	@ ( mv $(FAILURES).bak $(FAILURES) || true ) > /dev/null 2>&1
+	$(RUN) coverage.space jacebrowning/coverage-space unit
+
+.PHONY: test-backend-integration
+test-backend-integration: install data
+	@ if test -e $(FAILURES); then $(RUN) py.test tests/integration; fi
 	@ rm -rf $(FAILURES)
-	$(PYTEST) $(PYTEST_OPTS) tests --junitxml=$(REPORTS)/integration.xml
-	$(COVERAGE_SPACE) $(REPOSITORY) integration
+	$(RUN) py.test tests/integration
+	$(RUN) coverage.space jacebrowning/coverage-space integration
 
-.PHONY: test-all
-test-all: install data ## Run all the tests
-	@ if test -e $(FAILURES); then $(PYTEST) $(PYTEST_OPTS_FAILFAST) $(PACKAGES); fi
+.PHONY: test-backend-all
+test-backend-all: install data
+	@ if test -e $(FAILURES); then $(RUN) py.test $(PYTHON_PACKAGES) tests/integration; fi
 	@ rm -rf $(FAILURES)
-	$(PYTEST) $(PYTEST_OPTS) $(PACKAGES) --junitxml=$(REPORTS)/overall.xml
-	$(COVERAGE_SPACE) $(REPOSITORY) overall
+	$(RUN) py.test $(PYTHON_PACKAGES) tests/integration
+	$(RUN) coverage.space jacebrowning/coverage-space overall
 
-.PHONY: read-coverage
-read-coverage:
-	$(OPEN) htmlcov/index.html
+.PHONY: test-frontend
+test-frontend: test-frontend-unit
 
-# DOCUMENTATION ################################################################
+.PHONY: test-frontend-unit
+test-frontend-unit: install
+	# TODO: Run frontend tests if applicable
 
-PYREVERSE := $(BIN_)pyreverse
-PDOC := $(PYTHON) $(BIN_)pdoc
-MKDOCS := $(BIN_)mkdocs
+.PHONY: test-system
+test-system: install
+	$(RUN) honcho start --procfile=tests/system/Procfile --env=tests/system/.env
 
-PDOC_INDEX := docs/apidocs/$(PACKAGE)/index.html
-MKDOCS_INDEX := site/index.html
+# SERVER TARGETS ##############################################################
 
-.PHONY: doc
-doc: uml pdoc mkdocs ## Run documentation generators
+export FLASK_APP=api/app.py
 
-.PHONY: uml
-uml: install docs/*.png ## Generate UML diagrams for classes and packages
-docs/*.png: $(MODULES)
-	$(PYREVERSE) $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore tests
-	- mv -f classes_$(PACKAGE).png docs/classes.png
-	- mv -f packages_$(PACKAGE).png docs/packages.png
+.PHONY: run
+run: install data ## Run the applicaiton
+	FLASK_ENV=local $(RUN) python manage.py runserver
 
-.PHONY: pdoc
-pdoc: install $(PDOC_INDEX)  ## Generate API documentaiton with pdoc
-$(PDOC_INDEX): $(MODULES)
-	$(PDOC) --html --overwrite $(PACKAGE) --html-dir docs/apidocs
-	@ touch $@
+.PHONY: run-production
+run-production: install ## Run the application (simulate production)
+	pipenv shell "bin/pre_compile; exit \$$?"
+	pipenv shell "bin/post_compile; exit \$$?"
+	pipenv shell "heroku local release; exit \$$?"
+	pipenv shell "FLASK_ENV=production heroku local web; exit \$$?"
 
-.PHONY: mkdocs
-mkdocs: install $(MKDOCS_INDEX) ## Build the documentation site with mkdocs
-$(MKDOCS_INDEX): mkdocs.yml docs/*.md
-	ln -sf `realpath CHANGELOG.md --relative-to=docs/about` docs/about/changelog.md
-	ln -sf `realpath CONTRIBUTING.md --relative-to=docs/about` docs/about/contributing.md
-	ln -sf `realpath LICENSE.md --relative-to=docs/about` docs/about/license.md
-	$(MKDOCS) build --clean --strict
-	echo coverage.space > site/CNAME
+# RELEASE TARGETS #############################################################
 
-.PHONY: mkdocs-live
-mkdocs-live: mkdocs ## Launch and continuously rebuild the mkdocs site
-	eval "sleep 3; open http://127.0.0.1:8000" &
-	$(MKDOCS) serve
+.PHONY: build
+build: install
+	# TODO: Build frontend code for production if applicable
 
-# BUILD ########################################################################
+.PHONY: promote
+promote: install
+	TEST_SITE=https://staging.coverage.space $(RUN) pytest tests/system --cache-clear
+	heroku pipelines:promote --app coverage-space-staging --to coverage-space
+	TEST_SITE=https://coverage.space $(RUN) pytest tests/system
 
-PYINSTALLER := $(BIN_)pyinstaller
-PYINSTALLER_MAKESPEC := $(BIN_)pyi-makespec
-
-DIST_FILES := dist/*.tar.gz dist/*.whl
-EXE_FILES := dist/$(PROJECT).*
-
-.PHONY: dist
-dist: install $(DIST_FILES)
-$(DIST_FILES): $(MODULES) README.rst CHANGELOG.rst
-	rm -f $(DIST_FILES)
-	$(PYTHON) setup.py check --restructuredtext --strict --metadata
-	$(PYTHON) setup.py sdist
-	$(PYTHON) setup.py bdist_wheel
-
-%.rst: %.md
-	pandoc -f markdown_github -t rst -o $@ $<
-
-.PHONY: exe
-exe: install $(EXE_FILES)
-$(EXE_FILES): $(MODULES) $(PROJECT).spec
-	# For framework/shared support: https://github.com/yyuu/pyenv/wiki
-	$(PYINSTALLER) $(PROJECT).spec --noconfirm --clean
-
-$(PROJECT).spec:
-	$(PYINSTALLER_MAKESPEC) $(PACKAGE)/__main__.py --onefile --windowed --name=$(PROJECT)
-
-# RELEASE ######################################################################
-
-TWINE := $(BIN_)twine
-
-.PHONY: register
-register: dist ## Register the project on PyPI
-	@ echo NOTE: your project must be registered manually
-	@ echo https://github.com/pypa/python-packaging-user-guide/issues/263
-	# TODO: switch to twine when the above issue is resolved
-	# $(TWINE) register dist/*.whl
-
-.PHONY: upload
-upload: .git-no-changes register ## Upload the current version to PyPI
-	$(TWINE) upload dist/*
-	$(OPEN) https://pypi.python.org/pypi/$(PROJECT)
-
-.PHONY: .git-no-changes
-.git-no-changes:
-	@ if git diff --name-only --exit-code;        \
-	then                                          \
-		echo Git working copy is clean...;        \
-	else                                          \
-		echo ERROR: Git working copy is dirty!;   \
-		echo Commit your changes and try again.;  \
-		exit -1;                                  \
-	fi;
-
-# CLEANUP ######################################################################
-
-.PHONY: clean
-clean: .clean-dist .clean-test .clean-doc .clean-build ## Delete all generated and temporary files
-
-.PHONY: clean-all
-clean-all: clean .clean-env .clean-workspace
-
-.PHONY: .clean-build
-.clean-build:
-	find $(PACKAGES) -name '*.pyc' -delete
-	find $(PACKAGES) -name '__pycache__' -delete
-	rm -rf *.egg-info
-
-.PHONY: .clean-doc
-.clean-doc:
-	rm -rf README.rst docs/apidocs *.html docs/*.png site
-
-.PHONY: .clean-test
-.clean-test:
-	rm -rf .cache .pytest .coverage htmlcov xmlreport
-
-.PHONY: .clean-dist
-.clean-dist:
-	rm -rf *.spec dist build
-
-.PHONY: .clean-env
-.clean-env: clean
-	rm -rf $(ENV)
-
-.PHONY: .clean-workspace
-.clean-workspace:
-	rm -rf *.sublime-workspace
-
-# HELP #########################################################################
+# HELP ########################################################################
 
 .PHONY: help
 help: all
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@ grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .DEFAULT_GOAL := help

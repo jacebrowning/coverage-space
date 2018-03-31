@@ -2,7 +2,6 @@ import os
 
 
 class Config:
-    """Base configuration."""
 
     ENV = None
 
@@ -14,34 +13,41 @@ class Config:
     GOOGLE_ANALYTICS_TID = os.getenv('GOOGLE_ANALYTICS_TID')
 
 
-class ProdConfig(Config):
-    """Production configuration."""
+class ProductionConfig(Config):
 
-    ENV = 'prod'
+    ENV = 'production'
 
 
-class TestConfig(Config):
-    """Test configuration."""
+class StagingConfig(ProductionConfig):
+
+    ENV = 'staging'
+
+
+class LocalConfig(Config):
+
+    ENV = 'local'
+
+    DEBUG = True
+
+
+class TestConfig(LocalConfig):
 
     ENV = 'test'
 
-    DEBUG = True
     TESTING = True
 
 
-class DevConfig(Config):
-    """Development configuration."""
-
-    ENV = 'dev'
-
-    DEBUG = True
-
-
 def get_config(name):
-    assert name, "no configuration specified"
+    assert name, "No configuration specified"
 
-    for config in Config.__subclasses__():  # pylint: disable=no-member
+    for config in _subclasses(Config):
         if config.ENV == name:
             return config
 
-    assert False, "no matching configuration"
+    assert False, "No matching configuration"
+    return None
+
+
+def _subclasses(cls):
+    yield from cls.__subclasses__()
+    yield from (g for s in cls.__subclasses__() for g in _subclasses(s))

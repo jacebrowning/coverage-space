@@ -1,16 +1,15 @@
-import logging
 from collections import OrderedDict
 
 import yorm
+import log
 
 from .metrics import Metrics
-
-log = logging.getLogger(__name__)
 
 
 @yorm.attr(current=Metrics)
 @yorm.attr(minimum=Metrics)
-@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml", auto_create=False)
+@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml",
+           auto_create=False)
 class Project:
 
     THRESHOLD = 0.5

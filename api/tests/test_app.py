@@ -9,7 +9,7 @@ from api import settings
 def describe_app():
 
     def when_dev():
-        _app = app.create_app(settings.DevConfig)
+        _app = app.create_app(settings.LocalConfig)
 
         expect(_app.config['DEBUG']) is True
         expect(_app.config['TESTING']) is False
@@ -21,7 +21,7 @@ def describe_app():
         expect(_app.config['TESTING']) is True
 
     def when_prod():
-        _app = app.create_app(settings.ProdConfig)
+        _app = app.create_app(settings.ProductionConfig)
 
         expect(_app.config['DEBUG']) is False
         expect(_app.config['TESTING']) is False

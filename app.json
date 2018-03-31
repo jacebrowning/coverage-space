@@ -1,9 +1,18 @@
 {
-  "name": "coverage-space",
   "scripts": {
     "postdeploy": "make data"
   },
   "env": {
+    "PIPENV_COLORBLIND" : {
+      "value": "true"
+    },
+    "PIPENV_NOSPIN" : {
+      "value": "true"
+    },
+    "HEROKU_APP_NAME": {
+      "required": true
+    },
+
     "FLASK_ENV": {
       "required": true
     },
@@ -11,12 +20,12 @@
       "required": true
     }
   },
-  "addons": [
-    "papertrail"
-  ],
   "buildpacks": [
     {
       "url": "heroku/python"
     }
+  ],
+  "addons": [
+    "papertrail"
   ]
 }
