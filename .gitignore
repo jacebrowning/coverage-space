@@ -4,5 +4,7 @@
 /.venv/
 __pycache__/
 
+/data/
+
 /.coverage
 /htmlcov/

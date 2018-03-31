@@ -1,0 +1,50 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/coverage-space
+
+    docker:
+      - image: maketested/python-node:latest
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          RANDOM_SEED: 0
+
+    steps:
+      - checkout
+
+      - run:
+          name: Checking system dependencies
+          command: make doctor
+
+      - type: cache-restore
+        key: pipenv-{{ checksum "Pipfile.lock" }}
+
+      - run:
+          name: Installing project dependencies
+          command: make install
+
+      - type: cache-save
+        key: pipenv-{{ checksum "Pipfile.lock" }}
+        paths:
+          - .venv
+
+      - run:
+          name: Checking backend code
+          command: make check-backend
+
+      - run:
+          name: Running backend tests
+          command: make test-backend
+
+      - run:
+          name: Running frontend tests
+          command: make test-frontend
+
+      - run:
+          name: Running end-to-end tests
+          command: make build data test-system
+          environment:
+            FLASK_ENV: staging
+            HEROKU_APP_NAME: coverage-space-staging
+            SECRET_KEY: staging
