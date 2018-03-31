@@ -1,11 +1,9 @@
-import logging
 from collections import OrderedDict
 
 import yorm
+import log
 
 from .metrics import Metrics
-
-log = logging.getLogger(__name__)
 
 
 @yorm.attr(current=Metrics)

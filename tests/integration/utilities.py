@@ -1,7 +1,6 @@
 import json
-import logging
 
-log = logging.getLogger(__name__)
+import log
 
 
 def load(response, as_json=True, key=None):

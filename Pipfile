@@ -23,6 +23,9 @@ HTTPie = "~=0.9.9"
 sh = "~=1.12.14"
 YORM = "~=1.5.1"
 
+# Utilities
+minilog = "*"
+
 # Deployment
 Flask-Script = "~=2.0.6"
 gunicorn = "~=19.7.1"

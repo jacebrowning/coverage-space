@@ -1,12 +1,10 @@
-import logging
 from urllib.parse import urlencode, unquote
 
 from flask import request, current_app
 from flask_api import FlaskAPI
+import log
 
 from . import views
-
-log = logging.getLogger('api')
 
 
 def create_app(config):
@@ -24,13 +22,13 @@ def create_app(config):
 
 def configure_logging(app):
     if app.config['DEBUG']:
-        level = logging.DEBUG
+        level = log.DEBUG
     else:
-        level = logging.INFO
-    logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
-    logging.getLogger('sh').setLevel(logging.WARNING)
-    logging.getLogger('yorm').setLevel(logging.WARNING)
-    logging.getLogger('requests').setLevel(logging.WARNING)
+        level = log.INFO
+    log.init(level=level, format="%(levelname)s: %(message)s")
+    log.silence('sh', allow_warning=True)
+    log.silence('yorm', allow_warning=True)
+    log.silence('requests', allow_warning=True)
 
 
 def register_services(app):
