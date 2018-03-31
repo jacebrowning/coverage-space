@@ -1,7 +1,5 @@
 """Configuration file for sniffer."""
-# pylint: disable=superfluous-parens,bad-continuation
 
-import os
 import time
 import subprocess
 
@@ -14,85 +12,107 @@ else:
     notify = Notifier.notify
 
 
-watch_paths = ["api", "tests"]
+watch_paths = [
+    "api",
+    "tests",
+]
+
+class options:
+    group = int(time.time())
+    rerun_args = None
+    initial_run = True
+
+    @classmethod
+    def skip(cls):
+        should_skip = cls.initial_run
+        cls.initial_run = False
+        return should_skip
 
 
-@select_runnable('python')
+@select_runnable('backend_targets')
 @file_validator
-def python_files(filename):
-    """Match Python source files."""
+def backend_files(path):
+    return matches(path, 'py', 'ini') and 'system' not in path
 
-    return all((
-        filename.endswith('.py'),
-        not os.path.basename(filename).startswith('.'),
-    ))
+
+@select_runnable('frontend_targets')
+@file_validator
+def frontend_files(path):
+    return matches(path, 'html', 'js')
+
+
+@select_runnable('system_targets')
+@file_validator
+def system_files(path):
+    return matches(path, 'py', 'ini') and 'system' in path
+
+
+def matches(path, *extensions):
+    extension = path.split('.')[-1]
+    return extension in extensions
 
 
 @runnable
-def python(*_):
-    """Run targets for Python."""
+def backend_targets(*_args):
+    return run("Backend", [
+        ("Unit Tests", "make test-backend-unit", True),
+        ("Integration Tests", "make test-backend-all", False),
+        ("Static Analysis", "make check-backend", True),
+    ])
 
-    for count, (command, title, retry) in enumerate((
-        (('make', 'test-unit', 'CI=true'), "Unit Tests", True),
-        (('make', 'test-int', 'CI=true'), "Integration Tests", False),
-        (('make', 'test-all'), "Combined Tests", False),
-        (('make', 'check'), "Static Analysis", True),
-        (('make', 'doc'), None, True),
-    ), start=1):
 
-        if not run(command, title, count, retry):
+@runnable
+def frontend_targets(*_args):
+    return run("Frontend", [
+        ("Unit Tests", "make test-frontend-unit", True),
+        ("Static Analysis", "make check-frontend", True),
+    ])
+
+
+@runnable
+def system_targets(*_args):
+    if options.skip():
+        return True
+    return run("System", [
+        ("Tests", "make test-system TEST_HEADLESS=true", False),
+        ("Static Analysis", "make check-backend", True),
+    ])
+
+def run(name, targets):
+    count = 0
+    for count, (title, command, retry) in enumerate(targets, start=1):
+
+        success = call(f"{name} {title}", command, retry)
+        if not success:
+            message = "✅ " * (count - 1) + "❌"
+            show_notification(message, f"{name} {title}")
+
             return False
+
+    message = "✅ " * count
+    title = f"All {name} Targets"
+    show_notification(message, title)
 
     return True
 
 
-GROUP = int(time.time())  # unique per run
-
-_show_coverage = False
-_rerun_args = None
-
-
-def run(command, title, count, retry):
-    """Run a command-line program and display the result."""
-    global _rerun_args
-
-    if _rerun_args:
-        args = _rerun_args
-        _rerun_args = None
-        if not run(*args):
+def call(title, command, retry):
+    if options.rerun_args:
+        title, command, retry = options.rerun_args
+        options.rerun_args = None
+        success = call(title, command, retry)
+        if not success:
             return False
 
-    print("")
-    print("$ %s" % ' '.join(command))
-    failure = subprocess.call(command)
-
-    if failure:
-        mark = "❌" * count
-        message = mark + " [FAIL] " + mark
-    else:
-        mark = "✅" * count
-        message = mark + " [PASS] " + mark
-    show_notification(message, title)
-
-    show_coverage()
+    print(f"\n\n$ {command}")
+    failure = subprocess.call(command, shell=True)
 
     if failure and retry:
-        _rerun_args = command, title, count, retry
+        options.rerun_args = title, command, retry
 
     return not failure
 
 
 def show_notification(message, title):
-    """Show a user notification."""
     if notify and title:
-        notify(message, title=title, group=GROUP)
-
-
-def show_coverage():
-    """Launch the coverage report."""
-    global _show_coverage
-
-    if _show_coverage:
-        subprocess.call(['make', 'read-coverage'])
-
-    _show_coverage = False
+        notify(message, title=title, group=options.group)

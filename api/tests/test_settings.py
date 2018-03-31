@@ -7,15 +7,18 @@ from api.settings import get_config
 
 def describe_get_config():
 
-    def it_returns_a_config():
-        config = get_config('prod')
+    def when_valid():
+        config = get_config('production')
+        expect(config.ENV) == 'production'
 
-        expect(config.ENV) == 'prod'
+    def when_extended():
+        config = get_config('staging')
+        expect(config.ENV) == 'staging'
 
-    def it_handles_empty_names():
+    def when_empty():
         with expect.raises(AssertionError):
             get_config('')
 
-    def it_handles_unknown_names():
+    def when_unknown():
         with expect.raises(AssertionError):
-            get_config('not_a_valid_config')
+            get_config('unknown')
