@@ -120,7 +120,7 @@ $(DEPS_DEV): requirements/dev.txt $(PIP)
 ifdef WINDOWS
 	@ echo "Manually install pywin32: https://sourceforge.net/projects/pywin32/files/pywin32"
 else ifdef MAC
-	$(PIP) install --upgrade pync MacFSEvents
+	$(PIP) install --upgrade "pync<2.0" MacFSEvents
 else ifdef LINUX
 	$(PIP) install --upgrade pyinotify
 endif
