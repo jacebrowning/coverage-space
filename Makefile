@@ -144,7 +144,7 @@ build: install
 
 .PHONY: promote
 promote: install
-	TEST_SITE=https://staging-api.coverage.space $(RUN) pytest tests/system --cache-clear
+	TEST_SITE=https://staging.coverage.space $(RUN) pytest tests/system --cache-clear
 	heroku pipelines:promote --app coverage-space-staging --to coverage-space
 	TEST_SITE=https://api.coverage.space $(RUN) pytest tests/system
 
