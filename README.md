@@ -2,7 +2,7 @@
 
 > A place to track your code coverage metrics.
 
-[![Build Status](http://img.shields.io/travis/jacebrowning/coverage-space/master.svg)](https://travis-ci.org/jacebrowning/coverage-space)
+![Build Status](https://img.shields.io/circleci/project/github/jacebrowning/coverage-space.svg)
 [![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
 [![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/jacebrowning/coverage-space.svg)](https://scrutinizer-ci.com/g/jacebrowning/coverage-space/?branch=master)
 
