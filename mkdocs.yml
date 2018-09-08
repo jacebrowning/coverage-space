@@ -6,7 +6,7 @@ google_analytics: ['UA-6468614-12', 'coverage.space']
 
 theme: mkdocs
 
-pages:
+nav:
 - Home: index.md
 - API: api.md
 - Client: client.md

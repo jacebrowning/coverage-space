@@ -53,3 +53,6 @@ fire = "*"
 sniffer = "*"
 pync = { version = "<2.0", sys_platform = "== 'darwin'" }
 MacFSEvents = { version = "*", sys_platform = "== 'darwin'" }
+
+# Documentation
+mkdocs = "*"
