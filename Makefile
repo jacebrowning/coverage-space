@@ -94,21 +94,21 @@ test-backend-unit: install data
 	@ ( mv $(FAILURES) $(FAILURES).bak || true ) > /dev/null 2>&1
 	$(RUN) py.test $(PYTHON_PACKAGES) tests/unit
 	@ ( mv $(FAILURES).bak $(FAILURES) || true ) > /dev/null 2>&1
-	$(RUN) coverage.space jacebrowning/coverage-space unit
+	$(RUN) coveragespace jacebrowning/coverage-space unit
 
 .PHONY: test-backend-integration
 test-backend-integration: install data
 	@ if test -e $(FAILURES); then $(RUN) py.test tests/integration; fi
 	@ rm -rf $(FAILURES)
 	$(RUN) py.test tests/integration
-	$(RUN) coverage.space jacebrowning/coverage-space integration
+	$(RUN) coveragespace jacebrowning/coverage-space integration
 
 .PHONY: test-backend-all
 test-backend-all: install data
 	@ if test -e $(FAILURES); then $(RUN) py.test $(PYTHON_PACKAGES) tests/integration; fi
 	@ rm -rf $(FAILURES)
 	$(RUN) py.test $(PYTHON_PACKAGES) tests/integration
-	$(RUN) coverage.space jacebrowning/coverage-space overall
+	$(RUN) coveragespace jacebrowning/coverage-space overall
 
 .PHONY: test-frontend
 test-frontend: test-frontend-unit
