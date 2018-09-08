@@ -1,6 +1,6 @@
 [[source]]
 
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
@@ -11,7 +11,7 @@ python_version = "3.6"
 [packages]
 
 # Flask
-Flask = "~=0.12.2"
+Flask = "~=0.12.3"
 Flask-API = "~=1.0"
 webargs = "~=2.0.0"
 
@@ -44,7 +44,7 @@ pytest-expecter = "*"
 pytest-randomly = "*"
 pytest-cov = "*"
 freezegun = "*"
-coverage-space = "*"
+coveragespace = "*"
 
 # Tooling
 honcho = "*"
