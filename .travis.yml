@@ -14,10 +14,8 @@ before_install:
 install:
   - make install
 
-script:
-  - make mkdocs
-
-after_script: >
+script: >
+  make mkdocs;
   echo $TRAVIS_BRANCH; echo $TRAVIS_PULL_REQUEST;
   if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
     # Configure Git with Travis CI information

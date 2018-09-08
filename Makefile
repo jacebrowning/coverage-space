@@ -142,7 +142,6 @@ MKDOCS_INDEX := site/index.html
 
 .PHONY: promote
 promote: install
-	pipenv run mkdocs gh-deploy
 	TEST_SITE=https://staging.coverage.space $(RUN) pytest tests/system --cache-clear
 	heroku pipelines:promote --app coverage-space-staging --to coverage-space
 	TEST_SITE=https://api.coverage.space $(RUN) pytest tests/system
