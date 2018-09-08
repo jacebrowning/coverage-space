@@ -138,15 +138,23 @@ run-production: install ## Run the application (simulate production)
 
 # RELEASE TARGETS #############################################################
 
-.PHONY: build
-build: install
-	# TODO: Build frontend code for production if applicable
+MKDOCS_INDEX := site/index.html
 
 .PHONY: promote
 promote: install
+	pipenv run mkdocs gh-deploy
 	TEST_SITE=https://staging.coverage.space $(RUN) pytest tests/system --cache-clear
 	heroku pipelines:promote --app coverage-space-staging --to coverage-space
 	TEST_SITE=https://api.coverage.space $(RUN) pytest tests/system
+
+.PHONY: mkdocs
+mkdocs: install $(MKDOCS_INDEX)
+$(MKDOCS_INDEX): mkdocs.yml docs/*.md
+	ln -sf `realpath CHANGELOG.md --relative-to=docs/about` docs/about/changelog.md
+	ln -sf `realpath CONTRIBUTING.md --relative-to=docs/about` docs/about/contributing.md
+	ln -sf `realpath LICENSE.md --relative-to=docs/about` docs/about/license.md
+	pipenv run mkdocs build --clean --strict
+	echo coverage.space > site/CNAME
 
 # HELP ########################################################################
 
