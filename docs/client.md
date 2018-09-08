@@ -3,7 +3,7 @@
 To automate the process of updating coverage metrics, the official command-line client can be used to interact with the API:
 
 ```sh
-pip install --upgrade coverage.space
+pip install --upgrade coveragespace
 ```
 
 ## Updating Metrics
@@ -11,7 +11,7 @@ pip install --upgrade coverage.space
 To update coverage metrics:
 
 ```sh
-coverage.space <slug> <metric>
+coveragespace <slug> <metric>
 ```
 
 where:
