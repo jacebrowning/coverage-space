@@ -43,7 +43,7 @@ jobs:
 
       - run:
           name: Running end-to-end tests
-          command: make build data test-system
+          command: make data test-system
           environment:
             FLASK_ENV: staging
             HEROKU_APP_NAME: coverage-space-staging
