@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from pathlib import Path
 
 import yorm
 import log
@@ -20,12 +21,17 @@ class Project:
         self.branch = branch
         self.current = Metrics()
         self.minimum = Metrics()
+        self._create_readme()
 
     def __str__(self):
         if self.minimum:
             return str(self.current)
 
         return "Reset minimum metrics"
+
+    @property
+    def slug(self) -> str:
+        return f'{self.owner}/{self.repo}'
 
     @property
     def current_metrics(self):
@@ -41,6 +47,13 @@ class Project:
         data['current'] = self.current_metrics
         data['minimum'] = self.minimum_metrics
         return data
+
+    def _create_readme(self):
+        readme = Path('data') / self.owner / self.repo / 'README.md'
+        if not readme.exists():
+            readme.parent.mkdir(parents=True, exist_ok=True)
+            with readme.open('w') as f:
+                f.write(f'[{self.slug}](https://github.com/{self.slug})')
 
     def update(self, data, *, exception=ValueError):
         message = OrderedDict()
