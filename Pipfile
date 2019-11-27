@@ -11,9 +11,10 @@ python_version = "3.6"
 [packages]
 
 # Flask
-Flask = "~=0.12.3"
-Flask-API = "~=1.0"
+Flask = "~=1.1"
+Flask-API = "==2.0b1"
 webargs = "~=2.0.0"
+marshmallow = "~=2.15.4"
 
 # Client
 requests = "~=2.18.4"
