@@ -7,10 +7,10 @@ google_analytics: ['UA-6468614-12', 'coverage.space']
 theme: mkdocs
 
 nav:
-- Home: index.md
-- API: api.md
-- Client: client.md
-- About:
-  - Release Notes: about/changelog.md
-  - Contributing: about/contributing.md
-  - License: about/license.md
+  - Home: index.md
+  - API: api.md
+  - Client: client.md
+  - About:
+    - Release Notes: about/changelog.md
+    - Contributing: about/contributing.md
+    - License: about/license.md
