@@ -13,12 +13,12 @@ python_version = "3.6"
 # Flask
 Flask = "~=1.1"
 Flask-API = "~=2.0"
-webargs = "~=2.0.0"
+webargs = "~=5.1.3"
 marshmallow = "~=2.15.4"
 
 # Client
-requests = "~=2.20.0"
-HTTPie = "~=0.9.9"
+requests = "~=2.23.0"
+HTTPie = "~=1.0.3"
 
 # Storage
 sh = "~=1.12.14"
