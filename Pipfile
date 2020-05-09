@@ -22,7 +22,7 @@ HTTPie = "~=1.0.3"
 
 # Storage
 sh = "~=1.12.14"
-YORM = "~=1.5.1"
+YORM = "~=1.6.2"
 
 # Utilities
 minilog = "*"
