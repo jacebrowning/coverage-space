@@ -16,3 +16,7 @@ The service lets you upload coverage metrics and alerts you when they decrease. 
 ## Usage
 
 Check out the [API](api) or install the [command-line client](client).
+
+## Support
+
+Help support this project through [GitHub Sponsors](https://github.com/sponsors/jacebrowning).
