@@ -71,6 +71,4 @@ setuptools.setup(
         'Topic :: Software Development :: Quality Assurance',
         'Topic :: Software Development :: Testing',
     ],
-
-    install_requires=open("requirements.txt").readlines(),
 )
