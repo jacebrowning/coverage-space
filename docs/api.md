@@ -4,7 +4,7 @@ The API is available at [https://api.coverage.space](https://api.coverage.space)
 
 The API is also accessible from the command-line. The following examples will use [HTTPie](https://github.com/jkbrzt/httpie) for simplicity, but the same could be accomplished with `curl`. To install the HTTP client:
 
-```sh
+```text
 $ pip install HTTPie
 ```
 
@@ -12,13 +12,13 @@ $ pip install HTTPie
 
 To get the latest coverage metrics:
 
-```sh
+```text
 $ http GET api.coverage.space/my_owner/my_repo
 ```
 
 or specify a particular branch:
 
-```sh
+```text
 $ http GET api.coverage.space/my_owner/my_repo/my_branch
 ```
 
@@ -26,13 +26,13 @@ $ http GET api.coverage.space/my_owner/my_repo/my_branch
 
 To update coverage metrics:
 
-```sh
+```text
 $ http PUT api.coverage.space/my_owner/my_repo unit=90 --check-status
 ```
 
 or specify a particular branch:
 
-```sh
+```text
 $ http PUT api.coverage.space/my_owner/my_repo/my_branch unit=90 --check-status
 ```
 
@@ -40,12 +40,12 @@ $ http PUT api.coverage.space/my_owner/my_repo/my_branch unit=90 --check-status
 
 To reset the coverage metrics:
 
-```sh
+```text
 $ http DELETE api.coverage.space/my_owner/my_repo
 ```
 
 or specify a particular branch:
 
-```sh
+```text
 $ http DELETE api.coverage.space/my_owner/my_repo/my_branch
 ```
