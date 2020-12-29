@@ -17,7 +17,7 @@ install:
 script: >
   make mkdocs;
   echo $TRAVIS_BRANCH; echo $TRAVIS_PULL_REQUEST;
-  if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+  if [[ $TRAVIS_BRANCH == 'main' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
     # Configure Git with Travis CI information
     git config --global user.email "travis@travis-ci.org" ;
     git config --global user.name "travis-ci" ;
@@ -28,7 +28,7 @@ script: >
     git init ;
     git add . ;
     git commit -m "Deploy Travis CI build $TRAVIS_BUILD_NUMBER to GitHub pages" ;
-    git push -f https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG} master:gh-pages ;
+    git push -f https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG} main:gh-pages ;
   fi
 
 notifications:

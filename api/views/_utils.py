@@ -12,7 +12,7 @@ from .. import URL
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA = os.path.join(ROOT, "data")
 
-GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/master/"
+GITHUB_BASE = "https://raw.githubusercontent.com/jacebrowning/coverage-space/main/"
 CONTRIBUTING_URL = GITHUB_BASE + "CONTRIBUTING.md"
 CHANGELOG_URL = GITHUB_BASE + "CHANGELOG.md"
 

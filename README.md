@@ -2,9 +2,9 @@
 
 > A place to track your code coverage metrics.
 
-[![Build Status](https://img.shields.io/circleci/project/github/jacebrowning/coverage-space/master.svg)](https://circleci.com/gh/jacebrowning/coverage-space)
-[![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/master.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
-[![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/jacebrowning/coverage-space.svg)](https://scrutinizer-ci.com/g/jacebrowning/coverage-space/?branch=master)
+[![Build Status](https://img.shields.io/circleci/project/github/jacebrowning/coverage-space/main.svg)](https://circleci.com/gh/jacebrowning/coverage-space)
+[![Coverage Status](http://img.shields.io/coveralls/jacebrowning/coverage-space/main.svg)](https://coveralls.io/r/jacebrowning/coverage-space)
+[![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/jacebrowning/coverage-space.svg)](https://scrutinizer-ci.com/g/jacebrowning/coverage-space/?branch=main)
 [![GitHub Sponsor](https://img.shields.io/badge/server%20costs-%247%2Fmonth-red)](https://github.com/sponsors/jacebrowning)
 
 ## Quick Start
