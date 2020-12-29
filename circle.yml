@@ -5,9 +5,8 @@ jobs:
     working_directory: ~/coverage-space
 
     docker:
-      - image: maketested/python-node:latest
+      - image: cimg/python:3.6-browsers
         environment:
-          PIPENV_VENV_IN_PROJECT: true
           RANDOM_SEED: 0
 
     steps:
