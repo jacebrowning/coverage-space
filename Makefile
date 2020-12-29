@@ -21,7 +21,7 @@ watch: install ## CI | Rerun all validation targests in a loop
 
 .PHONY: doctor
 doctor: ## Check for required system dependencies
-	bin/verchew
+	bin/verchew --exit-code
 
 # PROJECT DEPENDENCIES ########################################################
 
