@@ -15,7 +15,7 @@ class Project:
 
     THRESHOLD = 0.5
 
-    def __init__(self, owner, repo, branch='master'):
+    def __init__(self, owner, repo, branch='main'):
         self.owner = owner
         self.repo = repo
         self.branch = branch
