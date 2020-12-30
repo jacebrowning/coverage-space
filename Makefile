@@ -61,8 +61,10 @@ data:
 	git clone /tmp/data data
 	cd data && git config user.name "Test User"
 	cd data && git config user.email "test@example.com"
+	cd data && git checkout -b master
 	cd data && git commit --allow-empty --message "Initial commit"
-	cd data && git push origin master && git pull
+	cd data && git push --set-upstream origin master
+	cd data && git push && git pull
 
 # VALIDATION TARGETS ##########################################################
 
