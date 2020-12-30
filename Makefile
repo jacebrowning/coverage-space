@@ -41,7 +41,6 @@ $(BACKEND_DEPENDENCIES):
 	@ touch $@
 
 $(FRONTEND_DEPENDENCIES):
-	# TODO: Install frontend dependencies if applicable
 	@ touch $@
 
 .PHONY: clean
@@ -51,7 +50,6 @@ clean:
 
 .PHONY: clean-all
 clean-all: clean
-	# TODO: Delete all frontend files
 	rm -rf $(VENV)
 
 # RUNTIME DEPENDENCIES ########################################################
@@ -81,7 +79,6 @@ check-backend: install
 
 .PHONY: check-frontend
 check-frontend: install
-	# TODO: Run frontend linters if applicable
 
 .PHONY: test
 test: test-backend test-frontend ## Run all tests
@@ -94,28 +91,27 @@ test-backend-unit: install data
 	@ ( mv $(FAILURES) $(FAILURES).bak || true ) > /dev/null 2>&1
 	$(RUN) py.test $(PYTHON_PACKAGES) tests/unit
 	@ ( mv $(FAILURES).bak $(FAILURES) || true ) > /dev/null 2>&1
-	$(RUN) coveragespace jacebrowning/coverage-space unit
+	$(RUN) coveragespace set unit
 
 .PHONY: test-backend-integration
 test-backend-integration: install data
 	@ if test -e $(FAILURES); then $(RUN) py.test tests/integration; fi
 	@ rm -rf $(FAILURES)
 	$(RUN) py.test tests/integration
-	$(RUN) coveragespace jacebrowning/coverage-space integration
+	$(RUN) coveragespace set integration
 
 .PHONY: test-backend-all
 test-backend-all: install data
 	@ if test -e $(FAILURES); then $(RUN) py.test $(PYTHON_PACKAGES) tests/integration; fi
 	@ rm -rf $(FAILURES)
 	$(RUN) py.test $(PYTHON_PACKAGES) tests/integration
-	$(RUN) coveragespace jacebrowning/coverage-space overall
+	$(RUN) coveragespace set overall
 
 .PHONY: test-frontend
 test-frontend: test-frontend-unit
 
 .PHONY: test-frontend-unit
 test-frontend-unit: install
-	# TODO: Run frontend tests if applicable
 
 .PHONY: test-system
 test-system: install
