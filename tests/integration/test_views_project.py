@@ -204,9 +204,9 @@ def describe_project_branch():
                 'overall': 6.0,
             }
 
-        def it_uses_master_as_the_default(client, project):
+        def it_uses_main_as_the_default(client, project):
             client.put("/my_owner/my_repo", data={'unit': 1.23})
-            status, data = load(client.get("/my_owner/my_repo/master"))
+            status, data = load(client.get("/my_owner/my_repo/main"))
 
             expect(status) == 200
             expect(data) == {
