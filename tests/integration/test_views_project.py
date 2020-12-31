@@ -51,6 +51,19 @@ def describe_project():
                 'message': "No such project."
             }
 
+        def it_handles_corrupt_projects(client, project):
+            with open(project.__mapper__.path, 'a') as f:
+                f.write('<bad data>')
+
+            status, data = load(client.get("/my_owner/my_repo"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
+            }
+
     def describe_put():
 
         def it_updates_metrics(client, project2):
@@ -189,6 +202,19 @@ def describe_project_branch():
             expect(status) == 404
             expect(data) == {
                 'message': "No such project or branch."
+            }
+
+        def it_handles_corrupt_projects(client, project):
+            with open(project.__mapper__.path, 'a') as f:
+                f.write('<bad data>')
+
+            status, data = load(client.get("/my_owner/my_repo/my_branch"))
+
+            expect(status) == 200
+            expect(data) == {
+                'unit': 0.0,
+                'integration': 0.0,
+                'overall': 0.0,
             }
 
     def describe_put():
