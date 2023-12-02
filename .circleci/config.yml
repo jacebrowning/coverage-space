@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/coverage-space
 
     docker:
-      - image: circleci/python:3.6
+      - image: circleci/python:3.6.10
         environment:
           RANDOM_SEED: 0
 
