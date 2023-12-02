@@ -1,13 +1,13 @@
 ifdef CIRCLECI
-	RUN := pipenv run
+	RUN := poetry run
 else ifdef HEROKU_APP_NAME
 	SKIP_INSTALL := true
 else
-	RUN := pipenv run
+	RUN := poetry run
 endif
 
 .PHONY: all
-all: check test ## CI | Run all validation targets
+all: doctor check test ## CI | Run all validation targets
 
 .PHONY: dev
 dev: install ## CI | Rerun all validation targests in a loop
@@ -16,26 +16,39 @@ dev: install ## CI | Rerun all validation targests in a loop
 
 # SYSTEM DEPENDENCIES #########################################################
 
+.PHONY: bootstrap
+bootstrap: ## Attempt to install system dependencies
+	asdf plugin add python || asdf plugin update python
+	asdf plugin add poetry || asdf plugin update poetry
+	asdf install
+
 .PHONY: doctor
 doctor: ## Check for required system dependencies
 	bin/verchew --exit-code
 
 # PROJECT DEPENDENCIES ########################################################
 
-export PIPENV_VENV_IN_PROJECT=true
-VENV := .venv
+VIRTUAL_ENV ?= .venv
 
-BACKEND_DEPENDENCIES := $(VENV)/.pipenv-$(shell bin/checksum Pipfile*)
-FRONTEND_DEPENDENCIES :=
+BACKEND_DEPENDENCIES = $(VIRTUAL_ENV)/.poetry-$(shell bin/checksum pyproject.toml poetry.lock)
 
 .PHONY: install
 ifndef SKIP_INSTALL
 install: $(BACKEND_DEPENDENCIES) $(FRONTEND_DEPENDENCIES) ## Install project dependencies
 endif
 
-$(BACKEND_DEPENDENCIES):
-	pipenv install --dev
+$(BACKEND_DEPENDENCIES): poetry.lock
+	@ rm -rf $(VIRTUAL_ENV)/.poetry-*
+	@ rm -rf ~/Library/Preferences/pypoetry
+	@ poetry config virtualenvs.in-project true
+	poetry install
 	@ touch $@
+
+ifndef CI
+poetry.lock: pyproject.toml
+	poetry lock --no-update
+	@ touch $@
+endif
 
 $(FRONTEND_DEPENDENCIES):
 	@ touch $@
@@ -124,13 +137,6 @@ export FLASK_APP=api/app.py
 run: install data ## Run the applicaiton
 	FLASK_ENV=local $(RUN) python manage.py runserver
 
-.PHONY: run-production
-run-production: install ## Run the application (simulate production)
-	pipenv shell "bin/pre_compile; exit \$$?"
-	pipenv shell "bin/post_compile; exit \$$?"
-	pipenv shell "heroku local release; exit \$$?"
-	pipenv shell "FLASK_ENV=production heroku local web; exit \$$?"
-
 # RELEASE TARGETS #############################################################
 
 MKDOCS_INDEX := site/index.html
@@ -147,7 +153,7 @@ $(MKDOCS_INDEX): mkdocs.yml docs/*.md
 	ln -sf `realpath CHANGELOG.md --relative-to=docs/about` docs/about/changelog.md
 	ln -sf `realpath CONTRIBUTING.md --relative-to=docs/about` docs/about/contributing.md
 	ln -sf `realpath LICENSE.md --relative-to=docs/about` docs/about/license.md
-	pipenv run mkdocs build --clean --strict
+	$(RUN) mkdocs build --clean --strict
 	echo coverage.space > site/CNAME
 
 # HELP ########################################################################

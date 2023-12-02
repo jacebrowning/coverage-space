@@ -8,7 +8,7 @@ cache:
     - .venv
 
 before_install:
-  - pip install pipenv
+  - curl -sSL https://install.python-poetry.org | python3 -
   - make doctor
 
 install:
