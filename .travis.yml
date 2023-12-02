@@ -1,6 +1,6 @@
 language: python
 python:
-  - 3.6
+  - 3.9
 
 cache:
   pip: true
@@ -8,7 +8,7 @@ cache:
     - .venv
 
 before_install:
-  - pip install pipenv
+  - curl -sSL https://install.python-poetry.org | python3 -
   - make doctor
 
 install:
