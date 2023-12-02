@@ -34,7 +34,7 @@ BACKEND_DEPENDENCIES = $(VIRTUAL_ENV)/.poetry-$(shell bin/checksum pyproject.tom
 
 .PHONY: install
 ifndef SKIP_INSTALL
-install: $(BACKEND_DEPENDENCIES) $(FRONTEND_DEPENDENCIES) ## Install project dependencies
+install: $(BACKEND_DEPENDENCIES) ## Install project dependencies
 endif
 
 $(BACKEND_DEPENDENCIES): poetry.lock
@@ -50,17 +50,10 @@ poetry.lock: pyproject.toml
 	@ touch $@
 endif
 
-$(FRONTEND_DEPENDENCIES):
-	@ touch $@
-
 .PHONY: clean
 clean:
-	rm -rf staticfiles
+	rm -rf $(VIRTUAL_ENV)
 	rm -rf .coverage htmlcov
-
-.PHONY: clean-all
-clean-all: clean
-	rm -rf $(VENV)
 
 # RUNTIME DEPENDENCIES ########################################################
 
