@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/coverage-space
 
     docker:
-      - image: maketested/python-node:latest
+      - image: circleci/python:3.8-browsers
         environment:
           PIPENV_VENV_IN_PROJECT: true
           RANDOM_SEED: 0
@@ -15,7 +15,7 @@ jobs:
 
       - run:
           name: Checking system dependencies
-          command: make doctor
+          command: pip install pipenv && make doctor
 
       - type: cache-restore
         key: pipenv-{{ checksum "Pipfile.lock" }}
