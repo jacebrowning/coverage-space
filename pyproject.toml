@@ -11,7 +11,7 @@ packages = [{ include = "api" }]
 
 [tool.poetry.dependencies]
 
-python = "3.9.16"
+python = "3.9.9"
 
 Flask = "~=1.1"
 Flask-API = "~=2.0"
