@@ -14,9 +14,7 @@ jobs:
 
       - run:
           name: Checking system dependencies
-          command:
-            - poetry self update
-            - make doctor
+          command: poetry self update && make doctor
 
       - restore_cache:
           key: poetry-{{ checksum "poetry.lock" }}
