@@ -6,7 +6,7 @@ name = "pypi"
 
 [requires]
 
-python_version = "3.6"
+python_version = "3.8"
 
 [packages]
 
@@ -26,6 +26,7 @@ YORM = "~=1.6.2"
 
 # Utilities
 minilog = "*"
+markupsafe = "~=1.1.1"
 
 # Deployment
 Flask-Script = "~=2.0.6"
@@ -34,7 +35,7 @@ gunicorn = "~=19.7.1"
 [dev-packages]
 
 # Linters
-pylint = "*"
+pylint = "~=2.6.0"
 pycodestyle = "*"
 pydocstyle = "*"
 
@@ -49,7 +50,7 @@ coveragespace = "~=4.0"
 
 # Tooling
 honcho = "*"
-splinter = "*"
+splinter = "~=0.14.0"
 fire = "*"
 sniffer = "*"
 pync = { version = "<2.0", sys_platform = "== 'darwin'" }
