@@ -42,6 +42,8 @@ def branch_metrics(data, owner, repo, branch):
 
 
 def _get_project(owner, repo, branch=None, *, create=False):
+    if owner.startswith(".") or repo.startswith("."):
+        return None
     args = [owner, repo]
     if branch:
         args.append(branch)

@@ -141,6 +141,15 @@ def describe_project():
                 'message': "No metrics provided."
             }
 
+        def it_returns_an_error_for_invalid_names(client, project2):
+            params = {'integration': 42}
+            status, data = load(client.put("/.my_owner/.my_repo", data=params))
+
+            expect(status) == 404
+            expect(data) == {
+                'message': "No such project."
+            }
+
     def describe_delete():
 
         def it_allows_metrics_to_decrease(client, project2):
