@@ -17,7 +17,7 @@ webargs = "~=5.5.3"
 marshmallow = "~=2.15.4"
 
 # Client
-requests = "~=2.23.0"
+requests = "~=2.31.0"
 HTTPie = "~=1.0.3"
 
 # Storage
