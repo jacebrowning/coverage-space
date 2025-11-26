@@ -7,7 +7,6 @@ jobs:
     docker:
       - image: circleci/python:3.9-browsers
         environment:
-          PIPENV_VENV_IN_PROJECT: true
           RANDOM_SEED: 0
 
     steps:
@@ -15,17 +14,17 @@ jobs:
 
       - run:
           name: Checking system dependencies
-          command: pip install pipenv && make doctor
+          command: make doctor
 
       - type: cache-restore
-        key: pipenv-{{ checksum "Pipfile.lock" }}
+        key: venv-{{ checksum "requirements.txt" }}-{{ checksum "runtime.txt" }}
 
       - run:
           name: Installing project dependencies
           command: make install
 
       - type: cache-save
-        key: pipenv-{{ checksum "Pipfile.lock" }}
+        key: venv-{{ checksum "requirements.txt" }}-{{ checksum "runtime.txt" }}
         paths:
           - .venv
 

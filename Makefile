@@ -1,10 +1,10 @@
-ifdef CIRCLECI
-	RUN := pipenv run
-else ifdef HEROKU_APP_NAME
+ifdef HEROKU_APP_NAME
 	SKIP_INSTALL := true
-else
-	RUN := pipenv run
 endif
+
+VENV := .venv
+PYTHON := $(VENV)/bin/python
+PIP := $(VENV)/bin/pip
 
 .PHONY: all
 all: check test ## CI | Run all validation targets
@@ -12,7 +12,7 @@ all: check test ## CI | Run all validation targets
 .PHONY: dev
 dev: install ## CI | Rerun all validation targests in a loop
 	@ rm -rf $(FAILURES)
-	$(RUN) sniffer
+	$(PYTHON) -m sniffer
 
 # SYSTEM DEPENDENCIES #########################################################
 
@@ -22,10 +22,7 @@ doctor: ## Check for required system dependencies
 
 # PROJECT DEPENDENCIES ########################################################
 
-export PIPENV_VENV_IN_PROJECT=true
-VENV := .venv
-
-BACKEND_DEPENDENCIES := $(VENV)/.pipenv-$(shell bin/checksum Pipfile*)
+BACKEND_DEPENDENCIES := $(VENV)/.requirements-$(shell bin/checksum requirements.txt runtime.txt)
 FRONTEND_DEPENDENCIES :=
 
 .PHONY: install
@@ -35,13 +32,15 @@ endif
 
 $(BACKEND_DEPENDENCIES):
 	@if [ ! -d "$(VENV)" ]; then \
-		pipenv install --python 3.9 --skip-lock || pipenv --python 3.9; \
+		python3 -m venv $(VENV); \
 	fi
-	pipenv run pip install PyYAML==6.0.3 || true
-	pipenv run pip install YORM==1.6.2 --no-deps || true
-	pipenv run pip install "parse~=1.8.0" "pathlib2!=2.3.3" simplejson || true
-	pipenv install --dev --skip-lock
-	pipenv run pip install --upgrade --force-reinstall PyYAML==6.0.3
+	$(PIP) install --upgrade pip
+	$(PIP) install PyYAML==6.0.3
+	$(PIP) install -r requirements.txt 2>&1 | grep -v "dependency conflicts" || true
+	$(PIP) install YORM==1.6.2 --no-deps --force-reinstall || true
+	$(PIP) install "parse~=1.8.0" "pathlib2!=2.3.3" simplejson || true
+	$(PIP) install --upgrade --force-reinstall PyYAML==6.0.3
+	$(PIP) install -r requirements.txt --force-reinstall --no-deps 2>&1 | grep -v "dependency conflicts" || true
 	@ touch $@
 
 $(FRONTEND_DEPENDENCIES):
@@ -80,8 +79,8 @@ check: check-backend ## Run static analysis
 
 .PHONY: check-backend
 check-backend: install
-	$(RUN) pylint $(PYTHON_PACKAGES) tests --rcfile=.pylint.ini
-	$(RUN) pycodestyle $(PYTHON_PACKAGES) tests --config=.pycodestyle.ini
+	$(PYTHON) -m pylint $(PYTHON_PACKAGES) tests --rcfile=.pylint.ini
+	$(PYTHON) -m pycodestyle $(PYTHON_PACKAGES) tests --config=.pycodestyle.ini
 
 .PHONY: check-frontend
 check-frontend: install
@@ -95,23 +94,23 @@ test-backend: test-backend-all
 .PHONY: test-backend-unit
 test-backend-unit: install data
 	@ ( mv $(FAILURES) $(FAILURES).bak || true ) > /dev/null 2>&1
-	$(RUN) pytest $(PYTHON_PACKAGES) tests/unit
+	$(PYTHON) -m pytest $(PYTHON_PACKAGES) tests/unit
 	@ ( mv $(FAILURES).bak $(FAILURES) || true ) > /dev/null 2>&1
-	$(RUN) coveragespace update unit
+	$(PYTHON) -m coveragespace update unit
 
 .PHONY: test-backend-integration
 test-backend-integration: install data
-	@ if test -e $(FAILURES); then $(RUN) pytest tests/integration; fi
+	@ if test -e $(FAILURES); then $(PYTHON) -m pytest tests/integration; fi
 	@ rm -rf $(FAILURES)
-	$(RUN) pytest tests/integration
-	$(RUN) coveragespace update integration
+	$(PYTHON) -m pytest tests/integration
+	$(PYTHON) -m coveragespace update integration
 
 .PHONY: test-backend-all
 test-backend-all: install data
-	@ if test -e $(FAILURES); then $(RUN) pytest $(PYTHON_PACKAGES) tests/integration; fi
+	@ if test -e $(FAILURES); then $(PYTHON) -m pytest $(PYTHON_PACKAGES) tests/integration; fi
 	@ rm -rf $(FAILURES)
-	$(RUN) pytest $(PYTHON_PACKAGES) tests/integration
-	$(RUN) coveragespace update overall
+	$(PYTHON) -m pytest $(PYTHON_PACKAGES) tests/integration
+	$(PYTHON) -m coveragespace update overall
 
 .PHONY: test-frontend
 test-frontend: test-frontend-unit
@@ -121,7 +120,7 @@ test-frontend-unit: install
 
 .PHONY: test-system
 test-system: install
-	$(RUN) honcho start --procfile=tests/system/Procfile --env=tests/system/.env
+	$(PYTHON) -m honcho start --procfile=tests/system/Procfile --env=tests/system/.env
 
 # SERVER TARGETS ##############################################################
 
@@ -129,14 +128,14 @@ export FLASK_APP=api/app.py
 
 .PHONY: run
 run: install data ## Run the applicaiton
-	FLASK_ENV=local $(RUN) python manage.py runserver
+	FLASK_ENV=local $(PYTHON) manage.py runserver
 
 .PHONY: run-production
 run-production: install ## Run the application (simulate production)
-	pipenv shell "bin/pre_compile; exit \$$?"
-	pipenv shell "bin/post_compile; exit \$$?"
-	pipenv shell "heroku local release; exit \$$?"
-	pipenv shell "FLASK_ENV=production heroku local web; exit \$$?"
+	bin/pre_compile
+	bin/post_compile
+	heroku local release
+	FLASK_ENV=production heroku local web
 
 # RELEASE TARGETS #############################################################
 
@@ -144,9 +143,9 @@ MKDOCS_INDEX := site/index.html
 
 .PHONY: promote
 promote: install
-	TEST_SITE=https://staging.coverage.space $(RUN) pytest tests/system --cache-clear
+	TEST_SITE=https://staging.coverage.space $(PYTHON) -m pytest tests/system --cache-clear
 	heroku pipelines:promote --app coverage-space-staging --to coverage-space
-	TEST_SITE=https://api.coverage.space $(RUN) pytest tests/system
+	TEST_SITE=https://api.coverage.space $(PYTHON) -m pytest tests/system
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -154,7 +153,7 @@ $(MKDOCS_INDEX): mkdocs.yml docs/*.md
 	ln -sf `realpath CHANGELOG.md --relative-to=docs/about` docs/about/changelog.md
 	ln -sf `realpath CONTRIBUTING.md --relative-to=docs/about` docs/about/contributing.md
 	ln -sf `realpath LICENSE.md --relative-to=docs/about` docs/about/license.md
-	pipenv run mkdocs build --clean --strict
+	$(PYTHON) -m mkdocs build --clean --strict
 	echo coverage.space > site/CNAME
 
 # HELP ########################################################################
