@@ -1,7 +1,7 @@
 """Unit tests configuration file."""
 # pylint: disable=redefined-outer-name,unused-argument
 
-import yorm
+import datafiles
 
 
 def pytest_configure(config):
@@ -12,4 +12,4 @@ def pytest_configure(config):
 
 def pytest_runtest_setup(item):
     """Disable file creation during unit tests."""
-    yorm.settings.fake = True
+    datafiles.settings.HOOKS_ENABLED = False

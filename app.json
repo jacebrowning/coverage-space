@@ -1,4 +1,16 @@
 {
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "heroku-community/apt"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "addons": [
+    "papertrail"
+  ],
   "scripts": {
     "postdeploy": "make data"
   },
@@ -19,13 +31,5 @@
     "DATA_REPO_URL": {
       "required": true
     }
-  },
-  "buildpacks": [
-    {
-      "url": "heroku/python"
-    }
-  ],
-  "addons": [
-    "papertrail"
-  ]
+  }
 }

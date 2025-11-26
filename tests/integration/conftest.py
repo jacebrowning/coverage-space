@@ -1,7 +1,7 @@
 """Integration tests configuration file."""
 # pylint: disable=unused-argument,wildcard-import,unused-wildcard-import
 
-import yorm
+import datafiles
 
 from api.tests.conftest import pytest_configure  # pylint: disable=unused-import
 
@@ -10,4 +10,4 @@ from .fixtures import *
 
 def pytest_runtest_setup(item):
     """Ensure files are created for integration tests."""
-    yorm.settings.fake = False
+    datafiles.settings.HOOKS_ENABLED = True

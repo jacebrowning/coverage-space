@@ -1,6 +1,12 @@
 {
     "cSpell.words": [
+        "buildpacks",
+        "NOSPIN",
+        "papertrail",
         "PIPENV",
-        "Pipfile"
+        "Pipfile",
+        "postdeploy",
+        "VENV",
+        "YORM"
     ]
 }

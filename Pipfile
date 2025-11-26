@@ -6,7 +6,7 @@ name = "pypi"
 
 [requires]
 
-python_version = "3.8"
+python_version = "3.9"
 
 [packages]
 
@@ -22,7 +22,7 @@ HTTPie = "~=1.0.3"
 
 # Storage
 sh = "~=1.12.14"
-YORM = "~=1.6.2"
+datafiles = "*"
 
 # Utilities
 minilog = "*"
@@ -44,7 +44,7 @@ pytest = "~=4.6"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-randomly = "*"
-pytest-cov = "*"
+pytest-cov = "~=2.12"
 freezegun = "*"
 coveragespace = "~=4.0"
 

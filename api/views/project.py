@@ -1,9 +1,8 @@
-import shutil
+
 
 from flask import Blueprint, request
 from flask_api import exceptions
-import log
-import yorm
+
 
 from .. import __version__
 from ..models import Project
@@ -47,13 +46,14 @@ def _get_project(owner, repo, branch=None, *, create=False):
     args = [owner, repo]
     if branch:
         args.append(branch)
+
+    if create:
+        return Project.objects.get_or_create(*args)
+
     try:
-        project = yorm.find(Project, *args, create=create)
-    except yorm.exceptions.FileContentError as e:
-        log.critical(e)
-        shutil.rmtree(f'data/{owner}/{repo}')
-        project = yorm.create(Project, *args)
-    return project
+        return Project.objects.get(*args)
+    except FileNotFoundError:
+        return None
 
 
 def _handle_request(project, data):
