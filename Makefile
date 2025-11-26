@@ -34,7 +34,14 @@ install: $(BACKEND_DEPENDENCIES) $(FRONTEND_DEPENDENCIES) ## Install project dep
 endif
 
 $(BACKEND_DEPENDENCIES):
-	pipenv install --dev
+	@if [ ! -d "$(VENV)" ]; then \
+		pipenv install --python 3.9 --skip-lock || pipenv --python 3.9; \
+	fi
+	pipenv run pip install PyYAML==6.0.3 || true
+	pipenv run pip install YORM==1.6.2 --no-deps || true
+	pipenv run pip install "parse~=1.8.0" "pathlib2!=2.3.3" simplejson || true
+	pipenv install --dev --skip-lock
+	pipenv run pip install --upgrade --force-reinstall PyYAML==6.0.3
 	@ touch $@
 
 $(FRONTEND_DEPENDENCIES):
