@@ -1,1 +1,8 @@
 #!/usr/bin/env bash
+
+# Remove Pipfile.lock on Heroku to force use of requirements.txt
+# This works around the YORM/PyYAML version conflict
+if [ -n "$HEROKU_APP_NAME" ]; then
+    echo "-----> Removing Pipfile.lock to use requirements.txt instead"
+    rm -f Pipfile.lock
+fi

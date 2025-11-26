@@ -1,0 +1,80 @@
+-i https://pypi.org/simple
+astroid==2.4.2; python_version >= '3.5'
+atomicwrites==1.4.1
+attrs==23.1.0; python_version >= '3.7'
+certifi==2024.7.4; python_version >= '3.6'
+chardet==3.0.4
+click==7.1.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+colorama==0.4.6; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'
+coverage[toml]==7.3.2; python_version >= '3.8'
+coveragespace==4.2; python_version >= '3.6' and python_version < '4.0'
+docopt==0.6.2
+fire==0.5.0
+freezegun==1.2.2; python_version >= '3.6'
+future==0.18.3; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+honcho==1.1.0
+idna==2.10; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+importlib-metadata==6.9.0; python_version < '3.10'
+isort==5.12.0; python_full_version >= '3.8.0'
+jinja2==2.11.3; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+joblib==1.4.2; python_version >= '3.8'
+lazy-object-proxy==1.4.3; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+livereload==2.6.3
+lunr[languages]==0.5.8
+macfsevents==0.8.4; sys_platform == 'darwin'
+markdown==3.5.1; python_version >= '3.8'
+markupsafe==1.1.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+mccabe==0.6.1; python_version >= '3.6'
+minilog==2.2; python_version >= '3.8' and python_version < '4.0'
+mkdocs==1.1.2; python_version >= '3.5'
+more-itertools==10.1.0; python_version > '2.7'
+nltk==3.9; python_version >= '3.8'
+nose==1.3.7
+packaging==24.0; python_version >= '3.7'
+pluggy==0.13.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+py==1.11.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+pycodestyle==2.11.1; python_version >= '3.8'
+pydocstyle==6.3.0; python_version >= '3.6'
+pylint==2.6.2; python_version >= '3.5'
+pync==1.6.1; sys_platform == 'darwin'
+pytest==4.6.11; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+pytest-cov==4.1.0; python_version >= '3.7'
+pytest-describe==2.1.0; python_version >= '3.7'
+pytest-expecter==3.0; python_version >= '3.8' and python_version < '4.0'
+pytest-randomly==3.15.0; python_version >= '3.8'
+python-dateutil==2.8.2; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and sys_platform == 'darwin'
+python-termstyle==0.1.10
+pyyaml==6.0.3; python_version >= '3.6'
+regex==2024.7.24; python_version >= '3.8'
+requests==2.23.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+selenium==3.141.0
+setuptools==69.0.2; python_version >= '3.8'
+six==1.16.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+sniffer==0.4.1
+snowballstemmer==2.2.0
+splinter==0.14.0
+termcolor==2.4.0; python_version >= '3.8'
+toml==0.10.2; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+tomli==2.0.1; python_version < '3.11'
+tornado==6.4.2; python_version >= '3.8'
+tqdm==4.66.5; python_version >= '3.7'
+urllib3==1.25.11; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'
+wcwidth==0.2.12
+wrapt==1.16.0; python_version >= '3.6'
+zipp==3.19.1; python_version >= '3.8'
+flask==1.1.4; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+flask-api==2.0
+flask-script==2.0.6
+gunicorn==22.0.0; python_version >= '3.7'
+httpie==1.0.3
+itsdangerous==1.1.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+marshmallow==2.15.6
+parse==1.8.4
+pathlib2==2.3.7.post1
+pygments==2.17.2; python_version >= '3.7'
+sh==1.12.14
+simplejson==3.19.2; python_version >= '2.5' and python_version not in '3.0, 3.1, 3.2, 3.3'
+webargs==5.5.3
+werkzeug==1.0.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+yorm==1.6.2
+
