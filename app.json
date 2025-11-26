@@ -1,7 +1,11 @@
 {
-  "scripts": {
-    "postdeploy": "make data"
-  },
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  
   "env": {
     "PIPENV_COLORBLIND" : {
       "value": "true"
@@ -12,7 +16,6 @@
     "HEROKU_APP_NAME": {
       "required": true
     },
-
     "FLASK_ENV": {
       "required": true
     },
@@ -20,12 +23,7 @@
       "required": true
     }
   },
-  "buildpacks": [
-    {
-      "url": "heroku/python"
-    }
-  ],
-  "addons": [
-    "papertrail"
-  ]
+  "scripts": {
+    "postdeploy": "make data"
+  }
 }
