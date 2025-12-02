@@ -1,19 +1,13 @@
 from collections import OrderedDict
-
-import yorm
-from yorm.types import Float, AttributeDictionary
+from dataclasses import dataclass
 
 
-@yorm.attr(unit=Float)
-@yorm.attr(integration=Float)
-@yorm.attr(overall=Float)
-class Metrics(AttributeDictionary):
+@dataclass
+class Metrics:
 
-    def __init__(self, unit=0, integration=0, overall=0):
-        super().__init__()
-        self.unit = unit
-        self.integration = integration
-        self.overall = overall
+    unit: float = 0
+    integration: float = 0
+    overall: float = 0
 
     def __str__(self):
         return ("Unit: {self.unit}%, "

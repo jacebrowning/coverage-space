@@ -27,7 +27,7 @@ def configure_logging(app):
         level = log.INFO
     log.init(level=level, format="%(levelname)s: %(message)s")
     log.silence('sh', allow_warning=True)
-    log.silence('yorm', allow_warning=True)
+    log.silence('datafiles', allow_warning=True)
     log.silence('requests', allow_warning=True)
 
 

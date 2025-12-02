@@ -1,26 +1,24 @@
 from collections import OrderedDict
 from pathlib import Path
 
-import yorm
+from datafiles import datafile, field
 import log
 
 from .metrics import Metrics
 
 
-@yorm.attr(current=Metrics)
-@yorm.attr(minimum=Metrics)
-@yorm.sync("data/{self.owner}/{self.repo}/{self.branch}.yml",
-           auto_create=False)
+@datafile("./data/{self.owner}/{self.repo}/{self.branch}.yml")
 class Project:
 
     THRESHOLD = 0.5
 
-    def __init__(self, owner, repo, branch='main'):
-        self.owner = owner
-        self.repo = repo
-        self.branch = branch
-        self.current = Metrics()
-        self.minimum = Metrics()
+    owner: str
+    repo: str
+    branch: str = 'main'
+    current: Metrics = field(default_factory=Metrics)
+    minimum: Metrics = field(default_factory=Metrics)
+
+    def __post_init__(self):
         self._create_readme()
 
     def __str__(self):
