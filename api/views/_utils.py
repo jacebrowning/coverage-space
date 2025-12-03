@@ -23,7 +23,7 @@ def sync(model, *, changes=True):
     """Store all changes in version control."""
     if changes:
         log.info("Saving changes...")
-        git.checkout('master')
+        git.checkout("master")
         git.add(all=True)
         try:
             git.diff(cached=True, exit_code=True)
@@ -40,7 +40,7 @@ def sync(model, *, changes=True):
         git.fetch()
         with suppress(ErrorReturnCode):
             git.rebase(abort=True)
-        git.reset('origin/master', hard=True)
+        git.reset("origin/master", hard=True)
 
     if changes:
         log.info("Pushing changes...")
@@ -53,24 +53,22 @@ def track(obj):
         v=1,
         tid=_get_tid(),
         cid=request.remote_addr,
-
-        t='pageview',
+        t="pageview",
         dh=URL,
         dp=request.path,
-        dt=request.method + ' ' + request.url_rule.endpoint,
-
+        dt=request.method + " " + request.url_rule.endpoint,
         uip=request.remote_addr,
         ua=request.user_agent.string,
         dr=request.referrer,
     )
 
     if _get_tid(default=None):
-        requests.post("http://www.google-analytics.com/collect", data=data)
+        requests.post("http://www.google-analytics.com/collect", data=data, timeout=10)
         log.debug("Analytics data:\n%s", pprint.pformat(data))
 
     return obj
 
 
-def _get_tid(*, default='local'):
-    """Get the analtyics tracking identifier."""
-    return current_app.config['GOOGLE_ANALYTICS_TID'] or default
+def _get_tid(*, default="local"):
+    """Get the analytics tracking identifier."""
+    return current_app.config["GOOGLE_ANALYTICS_TID"] or default

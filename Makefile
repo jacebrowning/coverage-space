@@ -121,7 +121,7 @@ test-system: install
 export FLASK_APP=api/app.py
 
 .PHONY: run
-run: install data ## Run the applicaiton
+run: install data ## Run the application
 	FLASK_ENV=local $(RUN) python manage.py runserver
 
 .PHONY: run-production

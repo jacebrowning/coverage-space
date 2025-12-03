@@ -17,7 +17,7 @@ webargs = "~=5.5.3"
 marshmallow = "~=2.15.4"
 
 # Client
-requests = "~=2.23.0"
+requests = "~=2.28.0"
 HTTPie = "~=1.0.3"
 
 # Storage
@@ -35,22 +35,23 @@ gunicorn = "~=22.0.0"
 [dev-packages]
 
 # Linters
-pylint = "~=2.6.0"
+pylint = "~=3.3.9"
 pycodestyle = "*"
 pydocstyle = "*"
 
 # Testing
-pytest = "~=4.6"
+pytest = "~=8.4.2"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-randomly = "*"
-pytest-cov = "~=2.12"
+pytest-cov = "~=7.0.0"
 freezegun = "*"
-coveragespace = "~=4.0"
+coveragespace = "~=6.1"
 
 # Tooling
 honcho = "*"
-splinter = "~=0.14.0"
+selenium = "*"
+splinter = "~=0.21.0"
 fire = "*"
 sniffer = "*"
 pync = { version = "<2.0", sys_platform = "== 'darwin'" }
