@@ -5,10 +5,10 @@ from flask_api.exceptions import ParseError
 import log
 
 
-parser = FlaskParser(('form', 'data'))
+parser = FlaskParser(("form", "data"))
 
 
-@parser.location_handler('data')
+@parser.location_handler("data")
 def parse_data(request, name, field):
     return core.get_value(request.data, name, field)
 
@@ -23,11 +23,11 @@ class ProjectSchema(Schema):
     overall = fields.Float()
 
     @pre_load
-    def log_input(self, data):  # pylint: disable=no-self-use
+    def log_input(self, data):
         log.debug("Input data: %r", data)
 
     @post_load
-    def log_parsed(self, data):  # pylint: disable=no-self-use
+    def log_parsed(self, data):
         log.debug("Parsed data: %r", data)
 
     def handle_error(self, error, data):

@@ -17,7 +17,7 @@ webargs = "~=5.5.3"
 marshmallow = "~=2.15.4"
 
 # Client
-requests = "~=2.23.0"
+requests = "~=2.28.0"
 HTTPie = "~=1.0.3"
 
 # Storage
@@ -35,7 +35,7 @@ gunicorn = "~=22.0.0"
 [dev-packages]
 
 # Linters
-pylint = "~=2.6.0"
+pylint = "~=3.3.9"
 pycodestyle = "*"
 pydocstyle = "*"
 
@@ -46,7 +46,7 @@ pytest-expecter = "*"
 pytest-randomly = "*"
 pytest-cov = "~=2.12"
 freezegun = "*"
-coveragespace = "~=4.0"
+coveragespace = "~=6.1"
 
 # Tooling
 honcho = "*"

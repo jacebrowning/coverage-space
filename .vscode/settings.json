@@ -1,12 +1,51 @@
 {
+    "files.exclude": {
+        "*.egg-info": true,
+        "**/__pycache__/": true,
+        "**/.cache/": true,
+        "**/.coverage": true,
+        "**/.mypy_cache/": true,
+        "**/.pytest_cache/": true,
+        "**/.venv/": true,
+        "**/dist/": true,
+        "**/node_modules/": true,
+        "setup.py": true,
+        ".vscode/.ropeproject": true,
+        "bin/verchew": true
+    },
+    "python.defaultInterpreterPath": ".venv/bin/python",
+    "pylint.ignorePatterns": [
+        "*"
+    ],
+    "editor.formatOnSave": true,
     "cSpell.words": [
         "buildpacks",
+        "coveragespace",
+        "flaskparser",
+        "freezegun",
+        "geckodriver",
+        "gunicorn",
+        "htmlcov",
+        "lastfailed",
+        "markupsafe",
+        "mkdocs",
         "NOSPIN",
         "papertrail",
         "PIPENV",
         "Pipfile",
         "postdeploy",
+        "Procfile",
+        "pycodestyle",
+        "pydocstyle",
+        "pylint",
+        "pync",
+        "pypi",
+        "pytest",
+        "rcfile",
+        "runserver",
+        "staticfiles",
         "VENV",
+        "webargs",
         "YORM"
     ]
 }

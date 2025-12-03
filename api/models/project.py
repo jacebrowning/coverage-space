@@ -14,7 +14,7 @@ class Project:
 
     owner: str
     repo: str
-    branch: str = 'main'
+    branch: str = "main"
     current: Metrics = field(default_factory=Metrics)
     minimum: Metrics = field(default_factory=Metrics)
 
@@ -29,7 +29,7 @@ class Project:
 
     @property
     def slug(self) -> str:
-        return f'{self.owner}/{self.repo}'
+        return f"{self.owner}/{self.repo}"
 
     @property
     def current_metrics(self):
@@ -42,27 +42,27 @@ class Project:
     @property
     def metrics(self):
         data = OrderedDict()
-        data['current'] = self.current_metrics
-        data['minimum'] = self.minimum_metrics
+        data["current"] = self.current_metrics
+        data["minimum"] = self.minimum_metrics
         return data
 
     def _create_readme(self):
-        readme = Path('data') / self.owner / self.repo / 'README.md'
+        readme = Path("data") / self.owner / self.repo / "README.md"
         if not readme.exists():
             readme.parent.mkdir(parents=True, exist_ok=True)
-            with readme.open('w') as f:
-                f.write(f'[{self.slug}](https://github.com/{self.slug})')
+            with readme.open("w") as f:
+                f.write(f"[{self.slug}](https://github.com/{self.slug})")
 
     def update(self, data, *, exception=ValueError):
         message = OrderedDict()
 
-        for name in ['unit', 'integration', 'overall']:
+        for name in ["unit", "integration", "overall"]:
             current = data.get(name)
             if current is not None:
                 setattr(self.current, name, current)
                 minimum = getattr(self.minimum, name)
                 if minimum - current > self.THRESHOLD:
-                    msg = "Value dropped below minimum: {}".format(minimum)
+                    msg = f"Value dropped below minimum: {minimum}"
                     message[name] = [msg]
                 else:
                     log.debug("New minimum %s: %s", name, current)
