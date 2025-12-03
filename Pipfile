@@ -50,6 +50,7 @@ coveragespace = "~=6.1"
 
 # Tooling
 honcho = "*"
+selenium = "*"
 splinter = "~=0.21.0"
 fire = "*"
 sniffer = "*"
