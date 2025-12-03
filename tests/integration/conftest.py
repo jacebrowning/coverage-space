@@ -1,4 +1,5 @@
 """Integration tests configuration file."""
+
 # pylint: disable=unused-argument,wildcard-import,unused-wildcard-import
 
 import datafiles

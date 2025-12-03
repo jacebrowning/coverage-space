@@ -19,6 +19,8 @@
     ],
     "editor.formatOnSave": true,
     "cSpell.words": [
+        "addopts",
+        "autouse",
         "buildpacks",
         "coveragespace",
         "flaskparser",
