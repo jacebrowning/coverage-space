@@ -27,6 +27,7 @@ datafiles = "*"
 # Utilities
 minilog = "*"
 markupsafe = "~=1.1.1"
+setuptools = "*"  # provides distutils for Python 3.12+ (used by webargs)
 
 # Deployment
 Flask-Script = "~=2.0.6"
