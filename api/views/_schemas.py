@@ -23,16 +23,15 @@ class ProjectSchema(Schema):
     overall = fields.Float()
 
     @pre_load
-    def log_input(self, data):
+    def log_input(self, data, **_kwargs):
         log.debug("Input data: %r", data)
+        return data
 
     @post_load
-    def log_parsed(self, data):
+    def log_parsed(self, data, **_kwargs):
         log.debug("Parsed data: %r", data)
+        return data
 
-    def handle_error(self, error, data):
+    def handle_error(self, error, data, **_kwargs):
         log.error("Unable to parse: %r", data)
         raise UnprocessableEntity(error.messages)
-
-    class Meta:
-        strict = True

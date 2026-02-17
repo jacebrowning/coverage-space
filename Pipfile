@@ -6,7 +6,7 @@ name = "pypi"
 
 [requires]
 
-python_version = "3.9"
+python_version = "3.12"
 
 [packages]
 
@@ -14,7 +14,7 @@ python_version = "3.9"
 Flask = "~=1.1"
 Flask-API = "~=2.0"
 webargs = "~=5.5.3"
-marshmallow = "~=2.15.4"
+marshmallow = "~=3.21"
 
 # Client
 requests = "~=2.32.4"
@@ -27,6 +27,7 @@ datafiles = "*"
 # Utilities
 minilog = "*"
 markupsafe = "~=1.1.1"
+setuptools = "*"  # provides distutils for Python 3.12+ (used by webargs)
 
 # Deployment
 Flask-Script = "~=2.0.6"
