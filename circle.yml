@@ -1,33 +1,38 @@
-version: 2
+version: 2.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.5.1
 
 jobs:
   build:
     working_directory: ~/coverage-space
 
     docker:
-      - image: circleci/python:3.12.12-browsers
+      - image: cimg/python:3.12.12-browsers
         environment:
           PIPENV_VENV_IN_PROJECT: true
           RANDOM_SEED: 0
 
     steps:
+      - browser-tools/install-firefox
+      - browser-tools/install-geckodriver
       - checkout
 
       - run:
           name: Checking system dependencies
           command: pip install pipenv && make doctor
 
-      - type: cache-restore
-        key: pipenv-{{ checksum "Pipfile.lock" }}
+      - restore_cache:
+          key: pipenv-{{ checksum "Pipfile.lock" }}
 
       - run:
           name: Installing project dependencies
           command: make install
 
-      - type: cache-save
-        key: pipenv-{{ checksum "Pipfile.lock" }}
-        paths:
-          - .venv
+      - save_cache:
+          key: pipenv-{{ checksum "Pipfile.lock" }}
+          paths:
+            - .venv
 
       - run:
           name: Checking backend code
