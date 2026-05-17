@@ -16,6 +16,12 @@ dev: install ## CI | Rerun all validation targets in a loop
 
 # SYSTEM DEPENDENCIES #########################################################
 
+.PHONY: bootstrap
+bootstrap:
+	asdf plugin add python
+	asdf plugin add pipenv https://github.com/and-semakin/asdf-pipenv.git
+	asdf install
+
 .PHONY: doctor
 doctor: ## Check for required system dependencies
 	bin/verchew --exit-code

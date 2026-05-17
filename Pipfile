@@ -31,7 +31,7 @@ setuptools = "*"  # provides distutils for Python 3.12+ (used by webargs)
 
 # Deployment
 Flask-Script = "~=2.0.6"
-gunicorn = "~=22.0.0"
+gunicorn = "~=26.0.0"
 
 [dev-packages]
 
