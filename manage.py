@@ -1,7 +1,5 @@
 import os
 
-from flask_script import Manager, Server
-
 from api.settings import get_config
 from api.app import create_app
 
@@ -19,11 +17,11 @@ config = get_config(os.getenv('FLASK_ENV'))
 
 app = create_app(config)
 
-server = Server(extra_files=find_assets())
-
-manager = Manager(app)
-manager.add_command('run', server)
-
 
 if __name__ == '__main__':
-    manager.run()
+    app.run(
+        host='127.0.0.1',
+        port=int(os.getenv('PORT', 5000)),
+        debug=app.config['DEBUG'],
+        extra_files=list(find_assets()),
+    )

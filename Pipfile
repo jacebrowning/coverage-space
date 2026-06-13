@@ -30,7 +30,6 @@ minilog = "*"
 markupsafe = "~=3.0"
 
 # Deployment
-Flask-Script = "~=2.0.6"
 gunicorn = "~=26.0.0"
 
 [dev-packages]
