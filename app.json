@@ -1,5 +1,5 @@
 {
-  "stack": "heroku-24",
+  "stack": "heroku-26",
   "buildpacks": [
     {
       "url": "heroku-community/apt"
@@ -15,16 +15,15 @@
     "postdeploy": "make data"
   },
   "env": {
-    "PIPENV_COLORBLIND" : {
+    "PIPENV_COLORBLIND": {
       "value": "true"
     },
-    "PIPENV_NOSPIN" : {
+    "PIPENV_NOSPIN": {
       "value": "true"
     },
     "HEROKU_APP_NAME": {
       "required": true
     },
-
     "FLASK_ENV": {
       "required": true
     },
