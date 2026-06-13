@@ -1,16 +1,15 @@
-from webargs import core
 from webargs.flaskparser import FlaskParser
 from marshmallow import Schema, fields, pre_load, post_load
 from flask_api.exceptions import ParseError
 import log
 
 
-parser = FlaskParser(("form", "data"))
+parser = FlaskParser(location="data")
 
 
-@parser.location_handler("data")
-def parse_data(request, name, field):
-    return core.get_value(request.data, name, field)
+@parser.location_loader("data")
+def load_data(request, _schema):
+    return request.data
 
 
 class UnprocessableEntity(ParseError):

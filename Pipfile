@@ -11,10 +11,11 @@ python_version = "3.12"
 [packages]
 
 # Flask
-Flask = "~=1.1"
-Flask-API = "~=2.0"
-webargs = "~=5.5.3"
+Flask = "~=2.3"
+Flask-API = "~=3.1"
+webargs = "~=8.7"
 marshmallow = "~=3.21"
+werkzeug = "~=2.3,<3"
 
 # Client
 requests = "~=2.33.0"
@@ -26,8 +27,7 @@ datafiles = "*"
 
 # Utilities
 minilog = "*"
-markupsafe = "~=1.1.1"
-setuptools = "*"  # provides distutils for Python 3.12+ (used by webargs)
+markupsafe = "~=3.0"
 
 # Deployment
 Flask-Script = "~=2.0.6"
