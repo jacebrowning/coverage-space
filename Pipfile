@@ -21,7 +21,7 @@ requests = "~=2.33.0"
 HTTPie = "~=1.0.3"
 
 # Storage
-sh = "~=1.12.14"
+sh = "~=2.2.4"
 datafiles = "*"
 
 # Utilities
