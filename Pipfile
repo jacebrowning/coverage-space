@@ -36,7 +36,7 @@ gunicorn = "~=26.0.0"
 [dev-packages]
 
 # Linters
-pylint = "~=3.3.9"
+pylint = "~=4.0.9"
 pycodestyle = "*"
 pydocstyle = "*"
 
